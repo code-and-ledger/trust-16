@@ -1,4 +1,4 @@
-# Trust16: A Blockchain-Based Game of Strategy and Cooperation
+# Trust16: A Game of Strategy and Cooperation
 
 ## Whitepaper v1.2
 
