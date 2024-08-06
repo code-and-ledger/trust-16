@@ -1,0 +1,1118 @@
+\pdfminorversion=4
+\documentclass[]{article}
+
+%%%%%%%%%%%%%%%%%%%
+% Packages/Macros %
+%%%%%%%%%%%%%%%%%%%
+\usepackage{amssymb,latexsym,amsmath}     % Standard packages
+
+
+%%%%%%%%%%%
+% Margins %
+%%%%%%%%%%%
+\addtolength{\textwidth}{1.0in}
+\addtolength{\textheight}{1.00in}
+\addtolength{\evensidemargin}{-0.75in}
+\addtolength{\oddsidemargin}{-0.75in}
+\addtolength{\topmargin}{-.50in}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Theorem/Proof Environments %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtheorem{theorem}{Theorem}
+\newenvironment{proof}{\noindent{\bf Proof:}}{$\hfill \Box$ \vspace{10pt}}  
+
+
+%%%%%%%%%%%%
+% Document %
+%%%%%%%%%%%%
+\begin{document}
+
+\title{Trust16: A Blockchain-Based Game of Strategy and
+Cooperation}
+\author{Decentraland}
+\maketitle
+
+\begin{abstract}
+Trust16 is an innovative blockchain-based game that explores the dynamics of trust, cooperation, and competition in a digital environment. Built on the Aptos network, this pioneering platform combines elements of game theory, social psychology, and cryptographic technology to create a unique gaming experience with far-reaching implications for research and social good.
+
+Players engage in strategic matches where they must decide whether to cooperate or compete, with outcomes determining reward distribution. The game features a sophisticated character trait system, with 16 distinct traits that evolve based on player behavior, adding depth to gameplay and strategic decision-making. Trust16 incorporates multiple game modes, a native token economy, and an AI bot system, catering to a wide range of player preferences and skill levels.
+
+Beyond entertainment, Trust16 serves as a valuable research tool, offering insights into human behavior, decision-making processes, and the dynamics of trust in controlled, incentivized environments. The platform's data collection capabilities, coupled with its commitment to ethical considerations and academic partnerships, position it as a potential catalyst for advancing our understanding of cooperation and conflict resolution in the digital age.
+
+This whitepaper outlines the game mechanics, technical architecture, tokenomics, and long-term vision of Trust16, presenting a comprehensive overview of a project that aims to push the boundaries of blockchain gaming while contributing to meaningful social and scientific progress.
+\end{abstract}
+
+\hypertarget{table-of-contents}{%
+\section{Table of Contents}\label{table-of-contents}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item Executive Summary
+\item Introduction
+\item Game Mechanics
+   \begin{enumerate}
+   \item Campaign Mode
+   \item Short Game Mode
+   \item Long Game Mode
+   \item Core Mechanics
+   \item Trait System
+   \end{enumerate}
+\item Technical Architecture
+   \begin{enumerate}
+   \item Blockchain Integration
+   \item Smart Contract
+   \item Cryptographic Fairness
+   \item Frontend
+   \end{enumerate}
+\item Tokenomics and Game Economy
+   \begin{enumerate}
+   \item Token Utility and Multi-Currency Support
+   \item \$TRUST Token Incentives
+   \item Acquiring \$TRUST Tokens
+   \item Game Economy Mechanics
+   \item Sustainability Measures
+   \item Sample Game Calculation
+   \item Token Distribution
+   \item Token Emission Schedule
+   \item Governance
+   \item Future Economic Considerations
+   \end{enumerate}
+\item Character Traits System
+   \begin{enumerate}
+   \item Initial Trait
+   \item Unlockable Traits
+   \item Trait Impact
+   \item Trait Stability and Progression
+   \end{enumerate}
+\item Trait Prediction System
+   \begin{enumerate}
+   \item Trait Behavior Encoding
+   \item Trait Prediction Algorithm
+   \item Trait Ranking and Selection
+   \item Example Application
+   \item System Limitations and Future Improvements
+   \end{enumerate}
+\item Seasonal Play
+   \begin{enumerate}
+   \item Structure
+   \item Rewards
+   \item Seasonal Challenges
+   \end{enumerate}
+\item AI Bot Mode
+   \begin{enumerate}
+   \item Purpose
+   \item AI Implementation
+   \item Bot Personalities
+   \end{enumerate}
+\item Serving the Public Good
+   \begin{enumerate}
+   \item Educational Tool
+   \item Research Platform
+   \item Skill Development
+   \item Social Awareness
+   \item Data Collection for Social Good
+   \item Ethical Considerations and Data Usage
+   \end{enumerate}
+\item Future Roadmap
+\item Conclusion
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{executive-summary}{%
+\subsection{Executive Summary}\label{executive-summary}}
+
+Trust16 is an innovative blockchain-based game that challenges players
+to navigate the delicate balance between cooperation and competition.
+Built on the Aptos network, Trust16 combines elements of game theory,
+social interaction, and cryptographic security to create a unique gaming
+experience. Players engage in strategic matches, making decisions to
+cooperate or compete, with outcomes determining reward distribution. The
+game features 16 distinct character traits, a sophisticated prediction
+system, seasonal play, and an AI bot mode, offering a rich, multifaceted
+gaming experience that goes beyond mere entertainment to serve as a tool
+for research and social good.
+
+\hypertarget{introduction}{%
+\subsection{Introduction}\label{introduction}}
+
+In an era where trust is increasingly valuable yet scarce, Trust16
+emerges as a social experiment disguised as a game. It explores human
+nature, decision-making processes, and the dynamics of trust in a
+controlled, blockchain-powered environment. By incentivizing both
+cooperation and competition, Trust16 creates a complex ecosystem where
+strategy, psychology, and game theory intersect.
+
+The name ``Trust16'' encapsulates the core concept of the game - trust -
+and the 16 unique character traits that players can embody. This duality
+represents the game's focus on both individual strategy and the broader
+dynamics of group interaction.
+
+\hypertarget{game-mechanics}{%
+\subsection{Game Mechanics}\label{game-mechanics}}
+
+Trust16 offers three distinct game modes, each designed to cater to
+different player needs and time commitments:
+
+\hypertarget{campaign-mode}{%
+\subsubsection{Campaign Mode}\label{campaign-mode}}
+
+\begin{itemize}
+\tightlist
+\item
+  Purpose: Tutorial and trait introduction
+\item
+  Gameplay:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Players compete against AI bots
+  \item
+    Gradually introduces game mechanics and strategies
+  \item
+    Features all 16 character traits for players to interact with
+  \end{itemize}
+\item
+  Benefits:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Safe environment for new players to learn
+  \item
+    No stakes, allowing for experimentation
+  \item
+    Prepares players for PvP modes
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{short-game-mode}{%
+\subsubsection{Short Game Mode}\label{short-game-mode}}
+
+\begin{itemize}
+\tightlist
+\item
+  Duration: Maximum 1 minute per game
+\item
+  Gameplay:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Fast-paced PvP matches
+  \item
+    Players drop coins into a central rectangle to make decisions
+  \item
+    10 rounds of quick decision-making
+  \end{itemize}
+\item
+  Features:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Visual representation of choices (coin dropping)
+  \item
+    Rapid-fire decision making
+  \item
+    Ideal for quick games on-the-go
+  \end{itemize}
+\item
+  Outcome: Determined by the cumulative choices over 10 rounds
+\end{itemize}
+
+\hypertarget{long-game-mode}{%
+\subsubsection{Long Game Mode}\label{long-game-mode}}
+
+\begin{itemize}
+\tightlist
+\item
+  Duration: Variable, based on player-set chat time
+\item
+  Gameplay:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    In-depth PvP matches with strategic elements
+  \item
+    Includes a chat phase for negotiation and strategy discussion
+  \item
+    Single round with higher stakes
+  \end{itemize}
+\item
+  Features:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Secure, time-limited chat room
+  \item
+    Complex decision-making incorporating negotiation and trust-building
+  \item
+    Higher potential rewards
+  \end{itemize}
+\item
+  Outcome: Determined by a single, high-stakes decision
+\end{itemize}
+
+\hypertarget{core-mechanics-applicable-to-all-modes}{%
+\subsubsection{Core Mechanics (applicable to all
+modes)}\label{core-mechanics-applicable-to-all-modes}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Setup: Players connect wallets and select bet amounts (except in
+  Campaign mode)
+\item
+  Matchmaking: Smart contract pairs players with similar preferences
+  (for PvP modes)
+\item
+  Decision Phase: Players choose to cooperate (green) or compete (red)
+\item
+  Outcome: Rewards are distributed based on choices:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Green-Green: Both win, sharing deposits plus a bonus
+  \item
+    Green-Red: Competing player claims entire pot
+  \item
+    Red-Red: No rewards; deposits added to game's reward pool
+  \end{itemize}
+\end{enumerate}
+
+\hypertarget{trait-system}{%
+\subsubsection{Trait System}\label{trait-system}}
+
+\begin{itemize}
+\tightlist
+\item
+  Character traits are assigned based on playstyle across all game modes
+\item
+  Trait visibility and progression apply in all PvP modes
+\item
+  Campaign mode introduces players to all traits through bot
+  interactions
+\end{itemize}
+
+\hypertarget{technical-architecture}{%
+\subsection{Technical Architecture}\label{technical-architecture}}
+
+\hypertarget{blockchain-integration}{%
+\subsubsection{Blockchain
+Integration}\label{blockchain-integration}}
+
+Trust16 leverages the Aptos blockchain for its smart contract
+functionality, ensuring transparent and immutable game outcomes.
+
+\hypertarget{smart-contract}{%
+\subsubsection{Smart Contract}\label{smart-contract}}
+
+The core smart contract handles: - Player matching - Bet escrow -
+Outcome verification - Reward distribution
+
+\hypertarget{cryptographic-fairness}{%
+\subsubsection{Cryptographic
+Fairness}\label{cryptographic-fairness}}
+
+Verifiable Random Functions (VRFs) or commitment schemes are employed to
+ensure fair play and prevent result manipulation.
+
+\hypertarget{frontend}{%
+\subsubsection{Frontend}\label{frontend}}
+
+A user-friendly interface built with React and Web3 libraries provides
+seamless wallet integration and game interaction.
+
+\hypertarget{tokenomics-and-game-economy}{%
+\subsection{Tokenomics and Game
+Economy}\label{tokenomics-and-game-economy}}
+
+Trust16's economy is designed to be flexible, sustainable, and engaging,
+incentivizing both cooperation and strategic gameplay. While the native
+token, \$TRUST, is at the core of the game ecosystem, Trust16 also
+supports multiple currencies to enhance accessibility and user choice.
+
+\hypertarget{token-utility-and-multi-currency-support}{%
+\subsubsection{Token Utility and Multi-Currency
+Support}\label{token-utility-and-multi-currency-support}}
+
+\$TRUST tokens are the primary currency used for: - Game entry fees -
+Betting in matches - Purchasing in-game items - Staking for governance
+rights and passive income - Seasonal rewards
+
+Multi-Currency Support: - Players can deposit various cryptocurrency
+types to play Trust16 - Supported currencies include but are not limited
+to: ETH, BTC, USDT, USDC, and APT - All non-\$TRUST deposits are
+converted to \$TRUST at current market rates for gameplay
+
+\hypertarget{trust-token-incentives}{%
+\subsubsection{\$TRUST Token
+Incentives}\label{trust-token-incentives}}
+
+To encourage the use of \$TRUST tokens, the game offers the following
+benefits: - 10\% bonus \$TRUST when depositing with \$TRUST tokens -
+Reduced platform fees for \$TRUST transactions (3\% instead of 5\%) -
+Exclusive access to certain in-game items and events
+
+\hypertarget{acquiring-trust-tokens}{%
+\subsubsection{Acquiring \$TRUST
+Tokens}\label{acquiring-trust-tokens}}
+
+Players can obtain \$TRUST tokens through multiple methods: 1. Direct
+purchase on the Trust16 website 2. Swapping other cryptocurrencies for
+\$TRUST on supported DEXes 3. Earning through gameplay and rewards 4.
+Participating in special events and promotions
+
+\hypertarget{game-economy-mechanics}{%
+\subsubsection{Game Economy
+Mechanics}\label{game-economy-mechanics}}
+
+\hypertarget{match-entry-and-fees}{%
+\paragraph{5.4.1 Match Entry and Fees}\label{match-entry-and-fees}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Initial Withdrawal:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Players looking for a match have 110 \$TRUST withdrawn
+  \item
+    This includes a 10\% buffer for fees and potential bonuses
+  \end{itemize}
+\item
+  Fee Structure:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    5\% platform fee: 5.5 \$TRUST (3\% for \$TRUST deposits)
+  \item
+    Remaining 104.5 \$TRUST for gameplay
+  \end{itemize}
+\item
+  Round Mechanics (10 rounds):
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Playable amount per round: 10.45 \$TRUST
+  \end{itemize}
+\end{enumerate}
+
+\hypertarget{reward-pool}{%
+\paragraph{5.4.2 Reward Pool}\label{reward-pool}}
+
+\begin{itemize}
+\tightlist
+\item
+  Initialized with a seed amount (e.g., 100,000 \$TRUST)
+\item
+  Fed by Red-Red outcomes
+\item
+  Drawn from for Green-Green bonuses
+\end{itemize}
+
+\hypertarget{round-outcomes}{%
+\paragraph{5.4.3 Round Outcomes}\label{round-outcomes}}
+
+For each round: - Red-Red: 20.9 \$TRUST added to reward pool -
+Green-Red: Winning player receives 20.9 \$TRUST - Green-Green: Each
+player receives 11.495 \$TRUST (including 10\% bonus)
+
+\hypertarget{sustainability-measures}{%
+\subsubsection{Sustainability
+Measures}\label{sustainability-measures}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Dynamic Bonus Rate:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Bonus rates adjust based on reward pool size
+  \item
+    Larger pool: Higher bonuses to encourage cooperation
+  \item
+    Smaller pool: Lower bonuses to allow replenishment
+  \end{itemize}
+\item
+  Seasonal Resets:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Reward pool resets each season
+  \item
+    Excess tokens used for events or burned to control inflation
+  \end{itemize}
+\item
+  Staking Mechanism:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Players can stake \$TRUST for passive income
+  \item
+    Staking rewards supplement the reward pool
+  \item
+    Stakers receive governance rights
+  \end{itemize}
+\item
+  Token Burning:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Portion of platform fees burned
+  \item
+    Controls token supply and potentially increases value
+  \end{itemize}
+\item
+  Tiered Gameplay:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Multiple stake levels (Low, Medium, High)
+  \item
+    Higher stakes offer better bonuses but require more \$TRUST
+  \end{itemize}
+\item
+  Reward Pool Protection:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Minimum threshold implemented
+  \item
+    Bonuses reduced or suspended if threshold reached
+  \end{itemize}
+\item
+  Anti-Collusion Measures:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Algorithms detect suspicious patterns
+  \item
+    Penalties for colluding accounts
+  \end{itemize}
+\end{enumerate}
+
+\hypertarget{sample-game-calculation}{%
+\subsubsection{Sample Game}\label{sample-game}}
+Calculation}\label{sample-game-calculation}}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lr}
+\multicolumn{2}{c}{\textbf{For a 10-round game:}} \\
+\hline
+Initial withdrawal & 110 \$TRUST \\
+Platform fee & 5.5 \$TRUST (3.3 \$TRUST for \$TRUST deposits) \\
+Playable amount & 104.5 \$TRUST (106.7 \$TRUST for \$TRUST deposits) \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\multicolumn{3}{c}{\textbf{Assuming 6 Green-Green, 3 Green-Red, 1 Red-Red outcomes:}} \\
+\hline
+Outcome & Calculation & Result \\
+\hline
+Green-Green & 6 * (22.99 \$TRUST) & 137.94 \$TRUST \\
+Green-Red & 3 * (20.9 \$TRUST) & 62.7 \$TRUST \\
+Red-Red & 1 * (20.9 \$TRUST to pool) & 20.9 \$TRUST \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lr}
+\multicolumn{2}{c}{\textbf{Final Results}} \\
+\hline
+Total player payout & 200.64 \$TRUST \\
+Net to reward pool & 20.9 - 12.54 (bonuses) = 8.36 \$TRUST \\
+\hline
+\end{tabular}
+\end{table}
+
+\hypertarget{token-distribution}{%
+\subsubsection{Token Distribution}\label{token-distribution}}
+
+{[}Note: Add specific details about the initial token distribution{]}
+
+\hypertarget{token-emission-schedule}{%
+\subsubsection{Token Emission
+Schedule}\label{token-emission-schedule}}
+
+{[}Note: Add details about token minting or fixed supply{]}
+
+\hypertarget{governance}{%
+\subsubsection{Governance}\label{governance}}
+
+\$TRUST token holders can participate in governance decisions,
+including: - Adjusting bonus rates and incentives - Proposing new
+features or supported currencies - Voting on protocol upgrades
+
+\hypertarget{future-economic-considerations}{%
+\subsubsection{Future Economic
+Considerations}\label{future-economic-considerations}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Cross-chain Integration:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Explore bridging \$TRUST to other blockchains for wider
+    accessibility
+  \item
+    Investigate cross-chain gameplay possibilities
+  \end{itemize}
+\item
+  DeFi Integration:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Implement yield farming opportunities for \$TRUST holders
+  \item
+    Explore liquidity provision incentives on DEXes
+  \end{itemize}
+\item
+  NFT Integration:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Develop NFT rewards that can be earned through gameplay or purchased
+    with \$TRUST
+  \item
+    Investigate NFT-based character trait enhancements
+  \end{itemize}
+\item
+  Economic Simulation:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Regularly model and simulate the economy to ensure long-term
+    sustainability
+  \item
+    Adjust multi-currency support and incentives based on market
+    conditions
+  \end{itemize}
+\item
+  Fiat On-ramp:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Explore partnerships to allow direct fiat currency purchases of
+    \$TRUST
+  \end{itemize}
+\end{enumerate}
+
+\hypertarget{character-traits-system}{%
+\subsection{Character Traits System}\label{character-traits-system}}
+
+\hypertarget{initial-trait}{%
+\subsubsection{Initial Trait}\label{initial-trait}}
+
+\begin{itemize}
+\tightlist
+\item
+  Finch: Assigned to players with fewer than 10 games. Represents those
+  beginning their journey in the game, with potential to soar.
+\end{itemize}
+
+\hypertarget{unlockable-traits}{%
+\subsubsection{Unlockable Traits}\label{unlockable-traits}}
+
+After 10 games, players unlock one of the following 16 traits based on
+their play style:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Owl: Strategic planner with wisdom and insight
+\item
+  Fox: Clever tactician, outsmarting opponents
+\item
+  Serpent: Cunning manipulator of the game's twists
+\item
+  Dog: Trustworthy ally, standing by teammates
+\item
+  Raccoon: Opportunist, turning chaos into advantage
+\item
+  Lion: Fearless challenger, facing obstacles head-on
+\item
+  Chameleon: Adaptable player, blending with changing situations
+\item
+  Dolphin: Empathetic guide, navigating emotional waters
+\item
+  Cheetah: Quick decision-maker, seizing instant opportunities
+\item
+  Bear: Resilient endurer, standing firm against adversity
+\item
+  Wolf: Team player, thriving in cooperative environments
+\item
+  Peacock: Charismatic negotiator, excelling in social interactions
+\item
+  Elephant: Methodical and memory-driven, learning from past experiences
+\item
+  Honeybee: Industrious and community-oriented, contributing to the
+  game's ecosystem
+\item
+  Raven: Intelligent problem-solver, finding creative solutions
+\item
+  Tiger: Bold risk-taker, not afraid to make daring moves
+\end{enumerate}
+
+\hypertarget{trait-impact}{%
+\subsubsection{Trait Impact}\label{trait-impact}}
+
+\begin{itemize}
+\tightlist
+\item
+  Traits are visible to opponents before and during matches
+\item
+  They provide insight into a player's likely strategy and behavior
+\item
+  Traits may influence matchmaking to create diverse and interesting
+  game dynamics
+\item
+  Future updates may introduce trait-specific bonuses or challenges
+\end{itemize}
+
+\hypertarget{trait-stability-and-progression}{%
+\subsubsection{Trait Stability and
+Progression}\label{trait-stability-and-progression}}
+
+Trust16 implements a trait stability system to reflect player experience
+and trait reliability:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Novice (10-24 games):
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Initial trait unveiled
+  \item
+    Represented by a black and white trait icon
+  \item
+    Trait reassessed every 5 games
+  \end{itemize}
+\item
+  Adept (25-99 games):
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Trait gains partial coloration
+  \item
+    Reassessed every 10 games
+  \item
+    Increased accuracy in trait prediction
+  \end{itemize}
+\item
+  Master (100+ games):
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Fully colored trait icon
+  \item
+    Trait reassessed every 25 games
+  \item
+    Highest stability and prediction accuracy
+  \end{itemize}
+\end{enumerate}
+
+This system provides visual feedback on player progression and trait
+reliability, encouraging long-term engagement while allowing for early
+trait assignment.
+
+\hypertarget{trait-prediction-system}{%
+\subsection{Trait Prediction System}\label{trait-prediction-system}}
+
+Trust16 employs a quantitative trait prediction system to analyze player
+behavior and assign the most probable character trait. This system uses
+a player's recent game history to calculate a trait score, allowing for
+dynamic trait assignment and strategic depth.
+
+\hypertarget{trait-behavior-encoding}{%
+\subsubsection{Trait Behavior
+Encoding}\label{trait-behavior-encoding}}
+
+Each trait is encoded with three behavioral indicators: - IC (Initial
+Cooperation): \{0, 1, -\} - RC (Response to Cooperation): \{0, 1, -\} -
+RT (Response to Competition): \{0, 1, -\}
+
+Where: - 0 represents competition - 1 represents cooperation - -
+represents a variable or adaptive response
+
+\hypertarget{trait-prediction-algorithm}{%
+\subsubsection{Trait Prediction
+Algorithm}\label{trait-prediction-algorithm}}
+
+Variables: - n: number of moves in the analyzed sequence - M = \{m₁, m₂,
+\ldots, mₙ\}: sequence of player moves, where mᵢ ∈ \{0, 1\} - T: set of
+all traits - For each trait t ∈ T: IC(t), RC(t), RT(t) ∈ \{0, 1, -\}
+
+Scoring Algorithm:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Initial Cooperation Score: S\_IC(t) = \{ 1, if IC(t) = m₁ or IC(t) = -
+  0, otherwise \}
+\item
+  Move Matching Score: S\_M(t) = ∑ᵢ₌₂ⁿ f(mᵢ, mᵢ₋₁, t)
+
+  Where f(mᵢ, mᵢ₋₁, t) = \{ 1, if (mᵢ₋₁ = 1 and (mᵢ = RC(t) or RC(t) =
+  -)) or (mᵢ₋₁ = 0 and (mᵢ = RT(t) or RT(t) = -)) 0, otherwise \}
+\item
+  Total Score: S\_total(t) = (S\_IC(t) + S\_M(t)) / n
+\item
+  Trait Prediction: Predicted Trait = argmax\_t S\_total(t)
+\item
+  Confidence Score: C(t) = S\_total(t) * 100\%
+\end{enumerate}
+
+\hypertarget{trait-ranking-and-selection}{%
+\subsubsection{Trait Ranking and
+Selection}\label{trait-ranking-and-selection}}
+
+Traits are ranked by their S\_total(t) values in descending order. The
+top k traits (e.g., k = 3) are selected as the most probable traits for
+the player.
+
+Top\_k\_traits = \{t₁, t₂, \ldots, tₖ \textbar{} S\_total(tᵢ) ≥
+S\_total(tⱼ) for all j \textgreater{} i\}
+
+\hypertarget{example-application}{%
+\subsubsection{7.4 Example Application}\label{example-application}}
+
+Consider two players with the following 10-move sequences:
+
+Player 1: 1, 0, 1, 1, 1, 1, 1, 1, 1, 1 Player 2: 1, 1, 0, 1, 1, 1, 1, 1,
+1, 0
+
+Applying the trait prediction algorithm:
+
+Player 1: - Cooperation Rate: 90\% - Top 3 predicted traits: 1. Dog
+(Score: 10/10, Confidence: 100\%) 2. Honeybee (Score: 9/10, Confidence:
+90\%) 3. Bear (Score: 8/10, Confidence: 80\%)
+
+Player 2: - Cooperation Rate: 80\% - Top 3 predicted traits: 1. Owl
+(Score: 9/10, Confidence: 90\%) 2. Dolphin (Score: 8/10, Confidence:
+80\%) 3. Wolf (Score: 8/10, Confidence: 80\%)
+
+\hypertarget{system-limitations-and-future-improvements}{%
+\subsubsection{System Limitations and Future
+Improvements}\label{system-limitations-and-future-improvements}}
+
+The current trait prediction system has several limitations: 1. It
+assumes equal weight for all moves in the sequence. 2. It does not
+account for the opponent's moves or game context. 3. It may struggle
+with highly adaptive or complex strategies.
+
+Future improvements may include: 1. Weighted scoring based on move
+recency or game phase. 2. Incorporation of opponent moves and game
+context in the analysis. 3. Machine learning algorithms for more
+sophisticated pattern recognition. 4. Longer-term player history
+analysis for more accurate trait prediction.
+
+\hypertarget{seasonal-play}{%
+\subsection{Seasonal Play}\label{seasonal-play}}
+
+\hypertarget{structure}{%
+\subsubsection{Structure}\label{structure}}
+
+\begin{itemize}
+\tightlist
+\item
+  Seasons last for one month.
+\item
+  Each season has a unique theme or challenge.
+\item
+  Leaderboards track various performance metrics.
+\end{itemize}
+
+\hypertarget{rewards}{%
+\subsubsection{Rewards}\label{rewards}}
+
+\begin{itemize}
+\tightlist
+\item
+  Exclusive seasonal NFTs
+\item
+  \$TRUST token rewards
+\item
+  Special in-game titles or badges
+\end{itemize}
+
+\hypertarget{seasonal-challenges}{%
+\subsubsection{Seasonal Challenges}\label{seasonal-challenges}}
+
+\begin{itemize}
+\tightlist
+\item
+  Unique gameplay modifiers each season
+\item
+  Special trait-based missions or objectives
+\item
+  Community-wide cooperative goals
+\end{itemize}
+
+\hypertarget{ai-bot-mode}{%
+\subsection{AI Bot Mode}\label{ai-bot-mode}}
+
+\hypertarget{purpose}{%
+\subsubsection{Purpose}\label{purpose}}
+
+\begin{itemize}
+\tightlist
+\item
+  Practice mode for new players
+\item
+  Available when human opponents are scarce
+\item
+  Helps maintain game liquidity
+\end{itemize}
+
+\hypertarget{ai-implementation}{%
+\subsubsection{AI Implementation}\label{ai-implementation}}
+
+\begin{itemize}
+\tightlist
+\item
+  Multiple difficulty levels
+\item
+  Machine learning algorithms to mimic human play styles
+\item
+  Regular updates to improve AI behavior
+\end{itemize}
+
+\hypertarget{bot-personalities}{%
+\subsubsection{Bot Personalities}\label{bot-personalities}}
+
+\begin{itemize}
+\tightlist
+\item
+  AI bots designed to emulate different trait behaviors
+\item
+  Provides players experience with various strategies
+\end{itemize}
+
+\hypertarget{serving-the-public-good}{%
+\subsection{Serving the Public Good}\label{serving-the-public-good}}
+
+Trust16 is designed not only as an entertaining game but also as a
+platform to contribute to the public good. Through its unique mechanics
+and data collection capabilities, Trust16 aims to make positive impacts
+in several areas:
+
+\hypertarget{educational-tool}{%
+\subsubsection{Educational Tool}\label{educational-tool}}
+
+\begin{itemize}
+\tightlist
+\item
+  Teaches game theory concepts interactively
+\item
+  Demonstrates the importance of trust and cooperation
+\item
+  Illustrates complex decision-making in strategic situations
+\end{itemize}
+
+\hypertarget{research-platform}{%
+\subsubsection{Research Platform}\label{research-platform}}
+
+\begin{itemize}
+\tightlist
+\item
+  Provides a controlled environment for studying human behavior at scale
+\item
+  Generates valuable data for social scientists, economists, and
+  psychologists
+\item
+  Facilitates cross-cultural studies on trust and cooperation
+\end{itemize}
+
+\hypertarget{skill-development}{%
+\subsubsection{Skill Development}\label{skill-development}}
+
+\begin{itemize}
+\tightlist
+\item
+  Improves players' negotiation and communication skills
+\item
+  Enhances strategic thinking and decision-making abilities
+\item
+  Develops emotional intelligence through interpreting others'
+  intentions
+\end{itemize}
+
+\hypertarget{social-awareness}{%
+\subsubsection{Social Awareness}\label{social-awareness}}
+
+\begin{itemize}
+\tightlist
+\item
+  Highlights the impact of trust and mistrust in society
+\item
+  Raises awareness about the importance of cooperation in solving global
+  challenges
+\item
+  Demonstrates how individual actions affect collective outcomes
+\end{itemize}
+
+\hypertarget{data-collection-for-social-good}{%
+\subsubsection{Data Collection for Social
+Good}\label{data-collection-for-social-good}}
+
+Trust16 will collect and analyze various statistics that can provide
+valuable insights:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Cooperation rates across different player traits and regions
+\item
+  Trust dynamics and the impact of communication
+\item
+  Economic behavior related to bet sizes and risk-taking
+\item
+  Decision-making patterns under various pressures
+\item
+  Group dynamics and the effect of individual traits on team performance
+\item
+  Learning and adaptation strategies over time
+\item
+  Reputation effects and their impact on gameplay
+\item
+  Patterns of forgiveness and retaliation
+\item
+  Ethical decision-making when personal and group benefits conflict
+\end{enumerate}
+
+\hypertarget{ethical-considerations-and-data-usage}{%
+\subsubsection{Ethical Considerations and Data
+Usage}\label{ethical-considerations-and-data-usage}}
+
+To ensure that Trust16 serves the public good responsibly:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  All data collection will be transparent and consensual
+\item
+  Player data will be anonymized to protect privacy
+\item
+  Collaborations with academic institutions will ensure rigorous
+  analysis
+\item
+  Findings will be published in open-access formats
+\item
+  Ethical implications of research and its applications will be
+  carefully considered
+\end{enumerate}
+
+\hypertarget{future-roadmap}{%
+\subsection{Future Roadmap}\label{future-roadmap}}
+
+Phase 1 (Launch): - Core game mechanics implementation - Basic trait
+system deployment - Initial smart contract deployment on Aptos network
+
+Phase 2 (Expansion): - Introduction of \$TRUST token and multi-currency
+support - Seasonal play implementation - Enhanced AI bot mode with
+trait-based personalities
+
+Phase 3 (Ecosystem Growth): - Governance model for \$TRUST holders -
+Tournament mode with significant prizes - Partnerships with other
+blockchain projects and academic institutions
+
+Phase 4 (Research Integration): - Collaboration with academic
+institutions for game theory research - Publication of anonymized game
+data for scientific study - Development of educational resources based
+on Trust16 insights
+
+Phase 5 (Advanced Features): - Cross-chain gameplay possibilities -
+Enhanced NFT integration with trait-based collectibles - Advanced DeFi
+features for \$TRUST holders
+
+\hypertarget{conclusion}{%
+\subsection{Conclusion}\label{conclusion}}
+
+Trust16 represents a pioneering effort in blockchain gaming, blending
+sophisticated game theory with cutting-edge technology. By creating a
+platform that is simultaneously a game, a social experiment, and a
+research tool, Trust16 aims to push the boundaries of what's possible in
+the realm of decentralized applications.
+
+The game's unique features, including its 16 character traits,
+multi-currency support, and trait stability system, provide a rich and
+engaging player experience. At the same time, the focus on data
+collection and analysis for social good positions Trust16 as more than
+just a game---it's a potential catalyst for understanding and improving
+human cooperation and trust dynamics.
+
+As we move forward, we invite players, developers, researchers, and
+institutions to join us in exploring the fascinating world of Trust16.
+Together, we can not only enjoy a compelling game but also contribute to
+meaningful insights that could shape our understanding of human behavior
+and social interactions in the digital age.
+
+The future of Trust16 is bright, with plans for continuous improvement,
+expansion, and integration with the broader blockchain and research
+communities. We're excited to embark on this journey of discovery,
+entertainment, and social impact with our growing community of players
+and partners.
+
+%%%%%%%%%%%%%%%%%%%
+\begin{center}
+\begin{picture}(100,100)(0,0)
+\setlength{\unitlength}{1pt}
+\put(20,70){\circle{30}}  \put(20,70){\circle*{10}}   % left eye
+\put(80,70){\circle{30}}  \put(80,70){\circle*{10}}   % right eye
+\put(40,40){\line(1,2){10}} \put(60,40){\line(-1,2){10}} \put(40,40){\line(1,0){20}} % nose
+\put(50,20){\oval(80,10)[b]} % mouth
+\multiput(0,90)(4,0){10}{\line(1,3){4}}  % left eyebrow
+\multiput(100,90)(-4,0){10}{\line(-1,3){4}}  % right eyebrow
+\end{picture}
+\end{center}
+
+
+\end{document}
