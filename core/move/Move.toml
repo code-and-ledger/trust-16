@@ -4,6 +4,7 @@ version = "1.0.0"
 authors = []
 
 [addresses]
+trust_16 = "0x2cdf1f17ef5a45e959140abc428ba14aa6d19a1923b2f440a699c04f1930da29"
 
 [dev-addresses]
 
