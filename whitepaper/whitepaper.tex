@@ -1,57 +1,42 @@
-\documentclass[]{article}
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{color}
 
-%%%%%%%%%%%%%%%%%%%
-% Packages/Macros %
-%%%%%%%%%%%%%%%%%%%
-\usepackage{amssymb,latexsym,amsmath}     % Standard packages
+\title{Trust16: A Blockchain-Based Game of Strategy and Cooperation}
+\author{Decentratech}
+\date{}
 
-
-%%%%%%%%%%%
-% Margins %
-%%%%%%%%%%%
-\addtolength{\textwidth}{1.0in}
-\addtolength{\textheight}{1.00in}
-\addtolength{\evensidemargin}{-0.75in}
-\addtolength{\oddsidemargin}{-0.75in}
-\addtolength{\topmargin}{-.50in}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Theorem/Proof Environments %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newtheorem{theorem}{Theorem}
-\newenvironment{proof}{\noindent{\bf Proof:}}{$\hfill \Box$ \vspace{10pt}}  
-
-
-%%%%%%%%%%%%
-% Document %
-%%%%%%%%%%%%
 \begin{document}
 
-\title{Trust16: A Blockchain-Based Game of Strategy and
-Cooperation}
-\author{Decentratech}
 \maketitle
 
 \begin{abstract}
 Trust16 is an innovative blockchain-based game that explores the dynamics of trust, cooperation, and competition in a digital environment. Built on the Aptos network, this pioneering platform combines elements of game theory, social psychology, and cryptographic technology to create a unique gaming experience with far-reaching implications for research and social good.
 
-Players engage in strategic matches where they must decide whether to cooperate or compete, with outcomes determining reward distribution. The game features a sophisticated character trait system, with 16 distinct traits that evolve based on player behavior and seasonal changes, adding depth to gameplay and strategic decision-making. Trust16 incorporates multiple game modes, a native token economy, and an AI bot system, catering to a wide range of player preferences and skill levels.
-
-Beyond entertainment, Trust16 serves as a valuable research tool, offering insights into human behavior, decision-making processes, and the dynamics of trust in controlled, incentivized environments. The platform's data collection capabilities, coupled with its commitment to ethical considerations and academic partnerships, position it as a potential catalyst for advancing our understanding of cooperation and conflict resolution in the digital age.
-
-This whitepaper outlines the game mechanics, technical architecture, tokenomics, and long-term vision of Trust16, presenting a comprehensive overview of a project that aims to push the boundaries of blockchain gaming while contributing to meaningful social and scientific progress.
+This whitepaper outlines the game mechanics, technical architecture, tokenomics, reputation system, and long-term vision of Trust16, presenting a comprehensive overview of a project that aims to push the boundaries of blockchain gaming while contributing to meaningful social and scientific progress.
 \end{abstract}
 
 \tableofcontents
 
 \section{Executive Summary}
 
-Trust16 is an innovative blockchain-based game that challenges players to navigate the delicate balance between cooperation and competition. Built on the Aptos network, Trust16 combines elements of game theory, social interaction, and cryptographic security to create a unique gaming experience. Players engage in strategic matches, making decisions to cooperate or compete, with outcomes determining reward distribution. 
+Trust16 is a groundbreaking blockchain-based game that challenges players to navigate the delicate balance between cooperation and competition. Key features include:
 
-The game features 16 distinct character traits that evolve seasonally, a sophisticated prediction system, seasonal play, and an AI bot mode, offering a rich, multifaceted gaming experience. Trust16's native \$TRUST token forms the core of its economy, with a carefully designed tokenomics model that balances accessibility, engagement, and long-term sustainability.
+\begin{itemize}
+    \item Multiple game modes catering to different player preferences and time commitments
+    \item A unique tokenomics model with community-boosting dual allocation
+    \item A sophisticated reputation system rewarding long-term engagement and positive behavior
+    \item Dynamic character traits that evolve with seasonal variations
+    \item Integration of AI bots for practice and consistent gameplay availability
+    \item A content creator campaign to foster community growth and engagement
+\end{itemize}
 
-Beyond its entertainment value, Trust16 serves as a powerful tool for research and social good, offering insights into human behavior, decision-making processes, and the dynamics of trust in a controlled, blockchain-powered environment.
+Trust16 aims to not only provide an engaging gaming experience but also serve as a valuable tool for research into human behavior, decision-making processes, and the dynamics of trust in incentivized environments.
 
 \section{Introduction}
 
@@ -64,498 +49,617 @@ The name "Trust16" encapsulates the core concept of the game - trust - and the 1
 Trust16 offers three distinct game modes, each designed to cater to different player needs and time commitments:
 
 \subsection{Campaign Mode}
-
 \begin{itemize}
-\item Purpose: Tutorial and trait introduction
-\item Gameplay:
-  \begin{itemize}
-  \item Players compete against AI bots
-  \item Gradually introduces game mechanics and strategies
-  \item Features all 16 character traits for players to interact with
-  \end{itemize}
-\item Benefits:
-  \begin{itemize}
-  \item Safe environment for new players to learn
-  \item No stakes, allowing for experimentation
-  \item Prepares players for PvP modes
-  \end{itemize}
+    \item Purpose: Tutorial and trait introduction
+    \item Players compete against AI bots
+    \item Gradually introduces game mechanics and strategies
+    \item Features all 16 character traits for players to interact with
 \end{itemize}
 
 \subsection{Short Game Mode}
-
 \begin{itemize}
-\item Duration: Maximum 1 minute per game
-\item Gameplay:
-  \begin{itemize}
-  \item Fast-paced PvP matches
-  \item Players drop coins into a central rectangle to make decisions
-  \item 10 rounds of quick decision-making
-  \end{itemize}
-\item Features:
-  \begin{itemize}
-  \item Visual representation of choices (coin dropping)
-  \item Rapid-fire decision making
-  \item Ideal for quick games on-the-go
-  \end{itemize}
-\item Outcome: Determined by the cumulative choices over 10 rounds
+    \item Duration: 5 rounds
+    \item Fast-paced PvP matches
+    \item Players make quick decisions to cooperate or compete in each round
+    \item High-stakes final round
 \end{itemize}
 
 \subsection{Long Game Mode}
-
 \begin{itemize}
-\item Duration: Variable, based on player-set chat time
-\item Gameplay:
-  \begin{itemize}
-  \item In-depth PvP matches with strategic elements
-  \item Includes a chat phase for negotiation and strategy discussion
-  \item Single round with higher stakes
-  \end{itemize}
-\item Features:
-  \begin{itemize}
-  \item Secure, time-limited chat room
-  \item Complex decision-making incorporating negotiation and trust-building
-  \item Higher potential rewards
-  \end{itemize}
-\item Outcome: Determined by a single, high-stakes decision
+    \item Duration: Variable, based on player-set chat time
+    \item In-depth PvP matches with strategic elements
+    \item Includes a chat phase for negotiation and strategy discussion
+    \item Single round with higher stakes
 \end{itemize}
 
-\subsection{Core Mechanics (applicable to all modes)}
+\subsection{Short Game Mode Mechanics}
+The Short Game Mode in Trust16 is designed to create a fast-paced, strategic experience that encapsulates the core dynamics of trust and betrayal. Here's a detailed breakdown of how it works:
 
+\subsubsection{Setup}
+\begin{itemize}
+    \item Each player deposits 10 TRUST
+    \item The rewards pool contributes 20 TRUST
+    \item Total Game Pool starts at 40 TRUST
+\end{itemize}
+
+\subsubsection{Rounds}
+The game consists of 5 rounds. In each round:
+\begin{itemize}
+    \item Players simultaneously choose to either Cooperate (Green) or Compete (Red)
+    \item Choices are revealed, and TRUST is redistributed based on the decisions
+\end{itemize}
+
+\subsubsection{TRUST Distribution}
+\begin{itemize}
+    \item If both players Cooperate (Green-Green):
+    \begin{itemize}
+        \item Each player receives 2 TRUST (1/5 of their deposit) + 2 TRUST (1/10 from game rewards pool)
+    \end{itemize}
+    \item If one player Competes and the other Cooperates (Red-Green):
+    \begin{itemize}
+        \item Competing player receives: Their previous balance + Cooperating player's previous balance + 2 TRUST (1/5 of Cooperating player's deposit)
+        \item Cooperating player receives: 2 TRUST (1/10 from game rewards pool)
+    \end{itemize}
+    \item If both players Compete (Red-Red):
+    \begin{itemize}
+        \item In rounds 1-4: Both players receive 0 TRUST, and the round's TRUST goes back to the Game Pool
+        \item In the final round (Round 5): Both players receive 0 TRUST, and all TRUST in the game (40 TRUST) goes back to the main rewards pool
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Game Pool Dynamics}
+\begin{itemize}
+    \item The Game Pool starts at 40 TRUST
+    \item It decreases as players accumulate TRUST through cooperation
+    \item It can increase if both players compete in non-final rounds
+    \item In the final round, if both players compete, the Game Pool resets to 40 TRUST and returns to the main rewards pool
+\end{itemize}
+
+\subsubsection{Final Outcomes}
+At the end of the 5 rounds, several outcomes are possible:
+\begin{itemize}
+    \item One player may have more TRUST than the other
+    \item Both players may have equal TRUST (not zero)
+    \item Both players may end with zero TRUST (if both compete in the final round)
+    \item Any remaining TRUST in the Game Pool stays there (unless both compete in the final round)
+\end{itemize}
+
+\subsection{Example Scenarios}
+To illustrate the diverse outcomes possible in Trust16's Short Game Mode, we present four scenarios:
+
+\subsubsection{Scenario 1: Dramatic Reversal (Player 1 < Player 2)}
+Players: Alice vs. Bob
+
+\begin{itemize}
+    \item Round 1 (Green-Green): Alice: 4, Bob: 4, Pool: 32
+    \item Round 2 (Green-Green): Alice: 8, Bob: 8, Pool: 24
+    \item Round 3 (Red-Green): Alice: 18, Bob: 2, Pool: 20
+    \item Round 4 (Green-Green): Alice: 22, Bob: 6, Pool: 12
+    \item Round 5 (Green-Red): Alice: 2, Bob: 30, Pool: 8
+\end{itemize}
+
+End results: Alice: 2, Bob: 30, Pool: 8
+
+This scenario demonstrates how a final round betrayal can dramatically reverse fortunes.
+
+\subsubsection{Scenario 2: Early Advantage (Player 1 < Player 2)}
+Players: Charlie vs. Diana
+
+\begin{itemize}
+    \item Round 1 (Green-Green): Charlie: 4, Diana: 4, Pool: 32
+    \item Round 2 (Green-Red): Charlie: 2, Diana: 10, Pool: 28
+    \item Round 3 (Green-Green): Charlie: 6, Diana: 14, Pool: 20
+    \item Round 4 (Green-Green): Charlie: 10, Diana: 18, Pool: 12
+    \item Round 5 (Green-Green): Charlie: 14, Diana: 22, Pool: 4
+\end{itemize}
+
+End results: Charlie: 14, Diana: 22, Pool: 4
+
+This scenario shows how an early competitive move can set the tone for the entire game.
+
+\subsubsection{Scenario 3: Balanced Outcome (Player 1 = Player 2 ≠ 0)}
+Players: Eve vs. Frank
+
+\begin{itemize}
+    \item Round 1 (Green-Green): Eve: 4, Frank: 4, Pool: 32
+    \item Round 2 (Red-Green): Eve: 10, Frank: 2, Pool: 28
+    \item Round 3 (Green-Red): Eve: 2, Frank: 14, Pool: 24
+    \item Round 4 (Green-Green): Eve: 6, Frank: 18, Pool: 16
+    \item Round 5 (Green-Green): Eve: 10, Frank: 22, Pool: 8
+\end{itemize}
+
+End results: Eve: 10, Frank: 22, Pool: 8
+
+This scenario illustrates how alternating competition and cooperation can lead to a more balanced outcome.
+
+\subsubsection{Scenario 4: Mutual Distrust (Player 1 = Player 2 = 0)}
+Players: Grace vs. Henry
+
+\begin{itemize}
+    \item Round 1 (Green-Green): Grace: 4, Henry: 4, Pool: 32
+    \item Round 2 (Green-Green): Grace: 8, Henry: 8, Pool: 24
+    \item Round 3 (Red-Green): Grace: 18, Henry: 2, Pool: 20
+    \item Round 4 (Green-Red): Grace: 2, Henry: 22, Pool: 16
+    \item Round 5 (Red-Red): Grace: 0, Henry: 0, Pool: 40
+\end{itemize}
+
+End results: Grace: 0, Henry: 0, Pool returns 40 to main rewards pool
+
+This scenario showcases how mutual competition in the final round can negate all previous gains.
+
+\subsection{Core Mechanics}
 \begin{enumerate}
-\item Setup: Players connect wallets and select bet amounts (except in Campaign mode)
-\item Matchmaking: Smart contract pairs players with similar preferences (for PvP modes)
-\item Decision Phase: Players choose to cooperate (green) or compete (red)
-\item Outcome: Rewards are distributed based on choices:
-  \begin{itemize}
-  \item Green-Green: Both win, sharing deposits plus a bonus
-  \item Green-Red: Competing player claims entire pot
-  \item Red-Red: No rewards; deposits added to game's reward pool
-  \end{itemize}
+    \item Setup: Players connect wallets and select bet amounts
+    \item Matchmaking: Smart contract pairs players with similar preferences
+    \item Decision Phase: Players choose to cooperate (green) or compete (red)
+    \item Outcome: Rewards are distributed based on choices as described in the Short Game Mode Mechanics
 \end{enumerate}
+
+\subsection{Trait System}
+\begin{itemize}
+    \item Character traits are assigned based on playstyle across all game modes
+    \item Trait visibility and progression apply in all PvP modes
+    \item Campaign mode introduces players to all traits through bot interactions
+\end{itemize}
 
 \section{Technical Architecture}
 
 \subsection{Blockchain Integration}
-
 Trust16 leverages the Aptos blockchain for its smart contract functionality, ensuring transparent and immutable game outcomes.
 
 \subsection{Smart Contract}
-
 The core smart contract handles:
 \begin{itemize}
-\item Player matching
-\item Bet escrow
-\item Outcome verification
-\item Reward distribution
+    \item Player matching
+    \item Bet escrow
+    \item Outcome verification
+    \item Reward distribution
 \end{itemize}
 
 \subsection{Cryptographic Fairness}
-
 Verifiable Random Functions (VRFs) or commitment schemes are employed to ensure fair play and prevent result manipulation.
 
 \subsection{Frontend}
-
 A user-friendly interface built with React and Web3 libraries provides seamless wallet integration and game interaction.
 
 \section{Tokenomics and Game Economy}
 
-Trust16's economy is designed to be flexible, sustainable, and engaging, incentivizing both cooperation and strategic gameplay. The native token, \$TRUST, is the exclusive currency used within the game ecosystem.
+Trust16 introduces a unique, community-focused tokenomics model that provides direct value to players while simultaneously enriching the game's reward ecosystem.
 
-\subsection{Token Utility}
-
-\$TRUST tokens are used exclusively for:
+\subsection{Token Valuation and Purchase}
 \begin{itemize}
-\item Game entry and betting in matches
-\item Purchasing in-game items and NFTs
-\item Seasonal rewards
+    \item 1 TRUST = 0.05€ (or 1€ = 20 TRUST)
+    \item Standard Purchase Example: For 10€, a total of 200 TRUST is minted
 \end{itemize}
 
-\subsection{Acquiring \$TRUST Tokens}
-
-Players can obtain \$TRUST tokens through:
-\begin{enumerate}
-\item Direct purchase on the Trust16 website
-\item Earning through gameplay and rewards
-\item Participating in special events and promotions
-\end{enumerate}
-
-\subsection{Game Economy Mechanics}
-
+\subsection{Community-Boosting Dual Allocation}
+When a player purchases TRUST tokens, the minted amount is equally split between the player and the game's Rewards Pool:
 \begin{itemize}
-\item No fees are deducted upon game start, maximizing the playable amount
-\item The rewards pool can be increased by minting new tokens as needed
-\item Users cannot trade \$TRUST tokens directly, but can use them to purchase tradeable NFTs
+    \item Player Allocation: The player receives half of the total minted TRUST tokens
+    \item Community Rewards Pool: The other half of the minted TRUST tokens is added directly to the game's Rewards Pool
 \end{itemize}
 
-\subsection{Sustainability Measures}
+Example:
+\begin{itemize}
+    \item A player purchases 10€ worth of TRUST
+    \item Total minted: 200 TRUST (10€ * 20 TRUST/€)
+    \item The player receives 100 TRUST in their wallet
+    \item Simultaneously, 100 TRUST is added to the Rewards Pool
+\end{itemize}
 
+\subsection{Benefits of the Dual Allocation Model}
 \begin{enumerate}
-\item Dynamic Reward Pool:
-   \begin{itemize}
-   \item The ability to mint tokens allows for flexible management of the reward pool
-   \item Careful monitoring and adjustment to maintain economic balance
-   \end{itemize}
-\item NFT Marketplace:
-   \begin{itemize}
-   \item Tradeable NFTs provide an indirect way for players to extract value
-   \item NFT rarity and utility carefully designed to drive demand for \$TRUST
-   \end{itemize}
-\item Controlled Token Supply:
-   \begin{itemize}
-   \item Strategic minting and burning of tokens to manage inflation
-   \item Regular economic simulations to ensure long-term sustainability
-   \end{itemize}
+    \item Direct Player Value: Players receive a substantial amount of TRUST tokens for their purchase
+    \item Immediate Community Impact: Every purchase instantly grows the game's reward ecosystem
+    \item Enhanced Gameplay Experience: A continually growing Rewards Pool allows for more frequent and valuable events and tournaments
+    \item Aligned Incentives: Players are encouraged to invest in the game, knowing it directly enhances the experience for everyone
+    \item Transparent and Fair: Clear split between player benefit and community contribution
 \end{enumerate}
 
-\subsection{Future Economic Considerations}
-
+\subsection{Rewards Pool Utilization}
+The Rewards Pool, boosted by this dual allocation system, is used to:
 \begin{enumerate}
-\item Enhanced NFT Ecosystem:
-   \begin{itemize}
-   \item Expand the range and utility of purchasable NFTs
-   \item Implement NFT staking or farming mechanisms
-   \end{itemize}
-\item Governance Integration:
-   \begin{itemize}
-   \item Explore governance rights for long-term players or high-value NFT holders
-   \item Community input on economic policies and game features
-   \end{itemize}
-\item Cross-game Partnerships:
-   \begin{itemize}
-   \item Investigate partnerships with other blockchain games for NFT interoperability
-   \item Explore cross-game events or challenges
-   \end{itemize}
+    \item Fund larger prize pools for tournaments and special events
+    \item Provide enhanced bonuses for consecutive cooperative plays
+    \item Offer substantial rewards for the Content Creator Campaign
+    \item Create periodic "jackpot" events with significant TRUST token prizes
+    \item Support additional community-building and engagement initiatives
+\end{enumerate}
+
+\subsection{Economic Balancing Measures}
+To ensure long-term sustainability:
+\begin{enumerate}
+    \item Regular Economic Audits: Continuous monitoring of token supply, distribution, and usage patterns
+    \item Seasonal Resets: The Rewards Pool partially resets each season, ensuring regular circulation of tokens
+    \item Dynamic Reward Scaling: Reward amounts may be dynamically adjusted based on the size of the Rewards Pool
+    \item Community Governance: Future implementation of governance mechanisms allowing long-term players to participate in economic decisions
 \end{enumerate}
 
 \section{Character Traits System}
 
-Trust16 features a dynamic character trait system that adds depth to gameplay and encourages strategic adaptation. The system combines stable core traits with seasonal variations to keep the game fresh and engaging.
-
 \subsection{Core Traits}
-
 The game maintains 16 standard character traits:
-
 \begin{enumerate}
-\item Owl: Strategic planner with wisdom and insight
-\item Fox: Clever tactician, outsmarting opponents
-\item Serpent: Cunning manipulator of the game's twists
-\item Dog: Trustworthy ally, standing by teammates
-\item Raccoon: Opportunist, turning chaos into advantage
-\item Lion: Fearless challenger, facing obstacles head-on
-\item Chameleon: Adaptable player, blending with changing situations
-\item Dolphin: Empathetic guide, navigating emotional waters
-\item Cheetah: Quick decision-maker, seizing instant opportunities
-\item Bear: Resilient endurer, standing firm against adversity
-\item Wolf: Team player, thriving in cooperative environments
-\item Peacock: Charismatic negotiator, excelling in social interactions
-\item Elephant: Methodical and memory-driven, learning from past experiences
-\item Honeybee: Industrious and community-oriented, contributing to the game's ecosystem
-\item Raven: Intelligent problem-solver, finding creative solutions
-\item Tiger: Bold risk-taker, not afraid to make daring moves
+    \item Owl: Strategic planner with wisdom and insight
+    \item Fox: Clever tactician, outsmarting opponents
+    \item Serpent: Cunning manipulator of the game's twists
+    \item Dog: Trustworthy ally, standing by teammates
+    \item Raccoon: Opportunist, turning chaos into advantage
+    \item Lion: Fearless challenger, facing obstacles head-on
+    \item Chameleon: Adaptable player, blending with changing situations
+    \item Dolphin: Empathetic guide, navigating emotional waters
+    \item Cheetah: Quick decision-maker, seizing instant opportunities
+    \item Bear: Resilient endurer, standing firm against adversity
+    \item Wolf: Team player, thriving in cooperative environments
+    \item Peacock: Charismatic negotiator, excelling in social interactions
+    \item Elephant: Methodical and memory-driven, learning from past experiences
+    \item Honeybee: Industrious and community-oriented, contributing to the game's ecosystem
+    \item Raven: Intelligent problem-solver, finding creative solutions
+    \item Tiger: Bold risk-taker, not afraid to make daring moves
 \end{enumerate}
 
 \subsection{Seasonal Trait Variations}
-
 To keep the game dynamic and encourage strategic adaptation:
-
 \begin{itemize}
-\item Each season, 4-6 characters receive significant trait changes or "seasonal variants"
-\item Seasonal variants feature visual changes (themed skins) and adjusted trait behaviors
-\item Remaining characters receive minor trait tweaks to keep the meta fresh
-\item Occasional introduction of new characters (yearly) with potential retirement of underperforming ones
+    \item Each season, 4-6 characters receive significant trait changes or "seasonal variants"
+    \item Seasonal variants feature visual changes (themed skins) and adjusted trait behaviors
+    \item Remaining characters receive minor trait tweaks to keep the meta fresh
+    \item Occasional introduction of new characters (yearly) with potential retirement of underperforming ones
 \end{itemize}
 
 \subsection{Trait Impact}
-
 \begin{itemize}
-\item Traits are visible to opponents before and during matches
-\item They provide insight into a player's likely strategy and behavior
-\item Traits influence matchmaking to create diverse and interesting game dynamics
-\item Seasonal variations encourage players to adapt strategies and explore new playstyles
+  \item Traits are visible to opponents before and during matches
+  \item They provide insight into a player's likely strategy and behavior
+  \item Traits influence matchmaking to create diverse and interesting game dynamics
+  \item Seasonal variations encourage players to adapt strategies and explore new playstyles
 \end{itemize}
 
 \subsection{Trait Stability and Progression}
-
 Trust16 implements a trait stability system to reflect player experience and trait reliability:
-
 \begin{enumerate}
-\item Novice (10-24 games):
-   \begin{itemize}
-   \item Initial trait unveiled
-   \item Represented by a black and white trait icon
-   \item Trait reassessed every 5 games
-   \end{itemize}
-\item Adept (25-99 games):
-   \begin{itemize}
-   \item Trait gains partial coloration
-   \item Reassessed every 10 games
-   \item Increased accuracy in trait prediction
-   \end{itemize}
-\item Master (100+ games):
-   \begin{itemize}
-   \item Fully colored trait icon
-   \item Trait reassessed every 25 games
-   \item Highest stability and prediction accuracy
-   \end{itemize}
+  \item Novice (10-24 games):
+  \begin{itemize}
+      \item Initial trait unveiled
+      \item Represented by a black and white trait icon
+      \item Trait reassessed every 5 games
+  \end{itemize}
+  \item Adept (25-99 games):
+  \begin{itemize}
+      \item Trait gains partial coloration
+      \item Reassessed every 10 games
+      \item Increased accuracy in trait prediction
+  \end{itemize}
+  \item Master (100+ games):
+  \begin{itemize}
+      \item Fully colored trait icon
+      \item Trait reassessed every 25 games
+      \item Highest stability and prediction accuracy
+  \end{itemize}
 \end{enumerate}
 
-This system provides visual feedback on player progression and trait reliability, encouraging long-term engagement while allowing for strategic depth through seasonal variations.
+\section{Reputation System}
 
-\section{Trait Prediction System}
+Trust16 implements a sophisticated Reputation System, represented by a soulbound token, which reflects a player's standing within the community.
 
-Trust16 employs a quantitative trait prediction system to analyze player behavior and assign the most probable character trait. This system uses a player's recent game history to calculate a trait score, allowing for dynamic trait assignment and strategic depth.
-
-\subsection{Trait Behavior Encoding}
-
-Each trait is encoded with three behavioral indicators:
+\subsection{Reputation Basics}
 \begin{itemize}
-\item IC (Initial Cooperation): \{0, 1, -\}
-\item RC (Response to Cooperation): \{0, 1, -\}
-\item RT (Response to Competition): \{0, 1, -\}
+  \item Reputation is represented by a non-transferable (soulbound) token
+  \item Reputation score ranges from 0 to 100 points
+  \item Players start with 0 reputation upon joining Trust16
 \end{itemize}
+
+\subsection{Reputation Formula}
+The reputation score (R) is calculated using the following formula:
+
+\begin{equation}
+R = \min(100, GP + CB + SS + CE + CP - RD)
+\end{equation}
 
 Where:
 \begin{itemize}
-\item 0 represents competition
-\item 1 represents cooperation
-\item - represents a variable or adaptive response
+  \item GP: Games Played (max 50 points)
+  \item CB: Cooperative Behavior (max 20 points)
+  \item SS: Successful Strategies (max 15 points)
+  \item CE: Community Engagement (max 10 points)
+  \item CP: Consistent Play (max 5 points)
+  \item RD: Reputation Decay
 \end{itemize}
 
-\subsection{Trait Prediction Algorithm}
-
-Variables:
-\begin{itemize}
-\item n: number of moves in the analyzed sequence
-\item M = \{m₁, m₂, \ldots, mₙ\}: sequence of player moves, where mᵢ ∈ \{0, 1\}
-\item T: set of all traits
-\item For each trait t ∈ T: IC(t), RC(t), RT(t) ∈ \{0, 1, -\}
-\end{itemize}
-
-Scoring Algorithm:
+Each component is calculated as follows:
 
 \begin{enumerate}
-\item Initial Cooperation Score: S\_IC(t) = \{ 1, if IC(t) = m₁ or IC(t) = - \\ 0, otherwise \}
-\item Move Matching Score: S\_M(t) = ∑ᵢ₌₂ⁿ f(mᵢ, mᵢ₋₁, t)
+  \item Games Played (GP):
+  \begin{equation}
+  GP = \min(50, 0.5 * SG + LG)
+  \end{equation}
+  Where SG is the number of Short Games and LG is the number of Long Games played.
 
-  Where f(mᵢ, mᵢ₋₁, t) = \{ 1, if (mᵢ₋₁ = 1 and (mᵢ = RC(t) or RC(t) = -)) or (mᵢ₋₁ = 0 and (mᵢ = RT(t) or RT(t) = -)) \\ 0, otherwise \}
-\item Total Score: S\_total(t) = (S\_IC(t) + S\_M(t)) / n
-\item Trait Prediction: Predicted Trait = argmax\_t S\_total(t)
-\item Confidence Score: C(t) = S\_total(t) * 100\%
+  \item Cooperative Behavior (CB):
+  \begin{equation}
+  CB = \min(20, 0.1 * GC + 0.05 * CGC)
+  \end{equation}
+  Where GC is the number of 'Green' (Cooperative) choices and CGC is the number of Consecutive 'Green' choices.
+
+  \item Successful Strategies (SS):
+  \begin{equation}
+  SS = \min(15, 0.2 * W)
+  \end{equation}
+  Where W is the number of games won.
+
+  \item Community Engagement (CE):
+  \begin{equation}
+  CE = \min(10, E + V + C)
+  \end{equation}
+  Where E is points from events, V is points from voting, and C is points from content creation.
+
+  \item Consistent Play (CP):
+  \begin{equation}
+  CP = \min(5, 0.5 * D)
+  \end{equation}
+  Where D is the number of days played in the last 30 days.
+
+  \item Reputation Decay (RD):
+  \begin{equation}
+  RD = \max(0, I - 30) * 0.5
+  \end{equation}
+  Where I is the number of inactive days.
 \end{enumerate}
 
-\subsection{Trait Ranking and Selection}
-
-Traits are ranked by their S\_total(t) values in descending order. The top k traits (e.g., k = 3) are selected as the most probable traits for the player.
-
-Top\_k\_traits = \{t₁, t₂, \ldots, tₖ | S\_total(tᵢ) ≥ S\_total(tⱼ) for all j > i\}
-
-\subsection{Example Application}
-
-Consider two players with the following 10-move sequences:
-
-Player 1: 1, 0, 1, 1, 1, 1, 1, 1, 1, 1
-Player 2: 1, 1, 0, 1, 1, 1, 1, 1, 1, 0
-
-Applying the trait prediction algorithm:
-
-Player 1:
+\subsection{Earning Reputation}
 \begin{itemize}
-\item Cooperation Rate: 90\%
-\item Top 3 predicted traits:
-  \begin{enumerate}
-  \item Dog (Score: 10/10, Confidence: 100\%)
-  \item Honeybee (Score: 9/10, Confidence: 90\%)
-  \item Bear (Score: 8/10, Confidence: 80\%)
-  \end{enumerate}
+  \item Playing games (primary factor)
+  \item Choosing cooperative actions
+  \item Winning games
+  \item Participating in community events and governance
+  \item Creating and sharing content
+  \item Maintaining consistent play
 \end{itemize}
 
-Player 2:
+\subsection{Reputation Decay}
+To encourage active participation:
 \begin{itemize}
-\item Cooperation Rate: 80\%
-\item Top 3 predicted traits:
-  \begin{enumerate}
-  \item Owl (Score: 9/10, Confidence: 90\%)
-  \item Dolphin (Score: 8/10, Confidence: 80\%)
-  \item Wolf (Score: 8/10, Confidence: 80\%)
-  \end{enumerate}
+    \item Inactivity for 30 days: -0.5 points per day (until reaching 0 or resuming activity)
 \end{itemize}
 
-\subsection{System Limitations and Future Improvements}
-
-The current trait prediction system has several limitations:
+\subsection{Reputation Tiers and Benefits}
 \begin{enumerate}
-\item It assumes equal weight for all moves in the sequence.
-\item It does not account for the opponent's moves or game context.
-\item It may struggle with highly adaptive or complex strategies.
+    \item Novice (0-20 points):
+    \begin{itemize}
+        \item Access to basic game modes
+    \end{itemize}
+    \item Apprentice (21-40 points):
+    \begin{itemize}
+        \item Unlock customizable profile backgrounds
+    \end{itemize}
+    \item Adept (41-60 points):
+    \begin{itemize}
+        \item Access to exclusive weekly tournaments
+    \end{itemize}
+    \item Expert (61-80 points):
+    \begin{itemize}
+        \item Unlock invitation-only short games
+        \item Ability to create private game lobbies
+    \end{itemize}
+    \item Master (81-100 points):
+    \begin{itemize}
+        \item Access to high-stakes game modes
+        \item Voting rights in game development decisions
+        \item Exclusive Master-tier cosmetic items
+    \end{itemize}
 \end{enumerate}
 
-Future improvements may include:
+\subsection{Special Game Modes (Unlocked at 75+ Reputation)}
 \begin{enumerate}
-\item Weighted scoring based on move recency or game phase.
-\item Incorporation of opponent moves and game context in the analysis.
-\item Machine learning algorithms for more sophisticated pattern recognition.
-\item Longer-term player history analysis for more accurate trait prediction.
+    \item Invitation-Only Short Games:
+    \begin{itemize}
+        \item Players can invite friends or high-reputation players for exclusive matches
+        \item Higher TRUST token stakes
+        \item Special trait bonuses active during these games
+    \end{itemize}
+    \item Strategy Duels:
+    \begin{itemize}
+        \item 1v1 matches where players can set custom game parameters
+        \item Results highly impact reputation scores
+    \end{itemize}
+    \item Reputation Riskers:
+    \begin{itemize}
+        \item High-risk, high-reward games where players can gain or lose significant reputation points
+    \end{itemize}
 \end{enumerate}
+
+\subsection{Reputation Display and Bragging Rights}
+\begin{itemize}
+    \item Reputation score prominently displayed on player profiles
+    \item Special badges and titles for reaching reputation milestones
+    \item Seasonal leaderboards for top reputation earners
+\end{itemize}
 
 \section{Seasonal Play}
 
 \subsection{Structure}
-
 \begin{itemize}
-\item Seasons last for one month.
-\item Each season has a unique theme or challenge.
-\item Leaderboards track various performance metrics.
+    \item Seasons last for one month
+    \item Each season has a unique theme or challenge
+    \item Leaderboards track various performance metrics
 \end{itemize}
 
 \subsection{Rewards}
-
 \begin{itemize}
-\item Exclusive seasonal NFTs
-\item \$TRUST token rewards
-\item Special in-game titles or badges
+    \item Exclusive seasonal NFTs
+    \item TRUST token rewards
+    \item Special in-game titles or badges
 \end{itemize}
 
 \subsection{Seasonal Challenges}
-
 \begin{itemize}
-\item Unique gameplay modifiers each season
-\item Special trait-based missions or objectives
-\item Community-wide cooperative goals
+    \item Unique gameplay modifiers each season
+    \item Special trait-based missions or objectives
+    \item Community-wide cooperative goals
+\end{itemize}
+
+\subsection{End-of-Season Events}
+\begin{itemize}
+    \item Last Chance Tournaments with large portions of the Rewards Pool as prizes
+    \item Cooperative Challenges with community-wide goals and bonus rewards
+    \item Trait Boost Event for significant trait progression
+    \item Token Burn Event for exclusive, limited-time rewards
 \end{itemize}
 
 \section{AI Bot Mode}
 
 \subsection{Purpose}
-
 \begin{itemize}
-\item Practice mode for new players
-\item Available when human opponents are scarce
-\item Helps maintain game liquidity
+    \item Practice mode for new players
+    \item Available when human opponents are scarce
+    \item Helps maintain game liquidity
 \end{itemize}
 
 \subsection{AI Implementation}
-
 \begin{itemize}
-\item Multiple difficulty levels
-\item Machine learning algorithms to mimic human play styles
-\item Regular updates to improve AI behavior
+    \item Multiple difficulty levels
+    \item Machine learning algorithms to mimic human play styles
+    \item Regular updates to improve AI behavior
 \end{itemize}
 
 \subsection{Bot Personalities}
-
 \begin{itemize}
-\item AI bots designed to emulate different trait behaviors
-\item Provides players experience with various strategies
+    \item AI bots designed to emulate different trait behaviors
+    \item Provides players experience with various strategies
+\end{itemize}
+
+\section{Content Creator Campaign}
+
+\subsection{Eligibility Criteria}
+\begin{itemize}
+    \item Content creators must have a minimum of X followers/subscribers on their platform
+    \item Content must be original and primarily focused on Trust16 gameplay, strategies, or community events
+\end{itemize}
+
+\subsection{Reward Tiers}
+\begin{enumerate}
+    \item Bronze Tier: X-Y views - Reward: Z TRUST tokens
+    \item Silver Tier: Y-Z views - Reward: 2Z TRUST tokens + exclusive in-game title
+    \item Gold Tier: Z+ views - Reward: 3Z TRUST tokens + exclusive character skin + feature on Trust16 social media
+\end{enumerate}
+
+\subsection{Submission and Verification Process}
+\begin{itemize}
+    \item Creators submit their content through a dedicated portal on the Trust16 website
+    \item Our team verifies view counts and content quality before approving rewards
+    \item Automated tracking of view milestones for efficient reward distribution
+\end{itemize}
+
+\subsection{Community Engagement Bonus}
+\begin{itemize}
+    \item Additional rewards for videos that generate high engagement (comments, likes, shares) relative to view count
+    \item Encourages creators to foster community discussions and player interactions
+\end{itemize}
+
+\subsection{Integration with Reputation System}
+\begin{itemize}
+    \item Content creation contributes to the Community Engagement (CE) component of the reputation score
+    \item High-reputation creators receive priority consideration for official partnership opportunities
 \end{itemize}
 
 \section{Serving the Public Good}
 
-Trust16 is designed not only as an entertaining game but also as a platform to contribute to the public good. Through its unique mechanics and data collection capabilities, Trust16 aims to make positive impacts in several areas:
-
 \subsection{Educational Tool}
-
 \begin{itemize}
-\item Teaches game theory concepts interactively
-\item Demonstrates the importance of trust and cooperation
-\item Illustrates complex decision-making in strategic situations
+    \item Teaches game theory concepts interactively
+    \item Demonstrates the importance of trust and cooperation
+    \item Illustrates complex decision-making in strategic situations
 \end{itemize}
 
 \subsection{Research Platform}
-
 \begin{itemize}
-\item Provides a controlled environment for studying human behavior at scale
-\item Generates valuable data for social scientists, economists, and psychologists
-\item Facilitates cross-cultural studies on trust and cooperation
+    \item Provides a controlled environment for studying human behavior at scale
+    \item Generates valuable data for social scientists, economists, and psychologists
+    \item Facilitates cross-cultural studies on trust and cooperation
 \end{itemize}
 
 \subsection{Skill Development}
-
 \begin{itemize}
-\item Improves players' negotiation and communication skills
-\item Enhances strategic thinking and decision-making abilities
-\item Develops emotional intelligence through interpreting others' intentions
+    \item Improves players' negotiation and communication skills
+    \item Enhances strategic thinking and decision-making abilities
+    \item Develops emotional intelligence through interpreting others' intentions
 \end{itemize}
 
 \subsection{Social Awareness}
-
 \begin{itemize}
-\item Highlights the impact of trust and mistrust in society
-\item Raises awareness about the importance of cooperation in solving global challenges
-\item Demonstrates how individual actions affect collective outcomes
+    \item Highlights the impact of trust and mistrust in society
+    \item Raises awareness about the importance of cooperation in solving global challenges
+    \item Demonstrates how individual actions affect collective outcomes
 \end{itemize}
 
 \subsection{Data Collection for Social Good}
-
 Trust16 will collect and analyze various statistics that can provide valuable insights:
-
 \begin{enumerate}
-\item Cooperation rates across different player traits and regions
-\item Trust dynamics and the impact of communication
-\item Economic behavior related to bet sizes and risk-taking
-\item Decision-making patterns under various pressures
-\item Group dynamics and the effect of individual traits on team performance
-\item Learning and adaptation strategies over time
-\item Reputation effects and their impact on gameplay
-\item Patterns of forgiveness and retaliation
-\item Ethical decision-making when personal and group benefits conflict
+    \item Cooperation rates across different player traits and regions
+    \item Trust dynamics and the impact of communication
+    \item Economic behavior related to bet sizes and risk-taking
+    \item Decision-making patterns under various pressures
+    \item Group dynamics and the effect of individual traits on team performance
+    \item Learning and adaptation strategies over time
+    \item Reputation effects and their impact on gameplay
+    \item Patterns of forgiveness and retaliation
+    \item Ethical decision-making when personal and group benefits conflict
 \end{enumerate}
 
 \subsection{Ethical Considerations and Data Usage}
-
 To ensure that Trust16 serves the public good responsibly:
-
 \begin{enumerate}
-\item All data collection will be transparent and consensual
-\item Player data will be anonymized to protect privacy
-\item Collaborations with academic institutions will ensure rigorous analysis
-\item Findings will be published in open-access formats
-\item Ethical implications of research and its applications will be carefully considered
+    \item All data collection will be transparent and consensual
+    \item Player data will be anonymized to protect privacy
+    \item Collaborations with academic institutions will ensure rigorous analysis
+    \item Findings will be published in open-access formats
+    \item Ethical implications of research and its applications will be carefully considered
 \end{enumerate}
 
 \section{Future Roadmap}
 
-The development and expansion of Trust16 is planned in several phases:
+Trust16's development and expansion is planned in several phases:
 
 \subsection{Phase 1 (Launch)}
 \begin{itemize}
-\item Core game mechanics implementation
-\item Basic trait system deployment
-\item Initial smart contract deployment on Aptos network
+    \item Core game mechanics implementation
+    \item Basic trait system deployment
+    \item Initial smart contract deployment on Aptos network
 \end{itemize}
 
 \subsection{Phase 2 (Expansion)}
 \begin{itemize}
-\item Introduction of \$TRUST token and economic model
-\item Seasonal play implementation
-\item Enhanced AI bot mode with trait-based personalities
+    \item Introduction of TRUST token and economic model
+    \item Seasonal play implementation
+    \item Enhanced AI bot mode with trait-based personalities
 \end{itemize}
 
 \subsection{Phase 3 (Ecosystem Growth)}
 \begin{itemize}
-\item NFT marketplace integration
-\item Tournament mode with significant prizes
-\item Partnerships with other blockchain projects and academic institutions
+    \item NFT marketplace integration
+    \item Tournament mode with significant prizes
+    \item Partnerships with other blockchain projects and academic institutions
 \end{itemize}
 
 \subsection{Phase 4 (Research Integration)}
 \begin{itemize}
-\item Collaboration with academic institutions for game theory research
-\item Publication of anonymized game data for scientific study
-\item Development of educational resources based on Trust16 insights
+    \item Collaboration with academic institutions for game theory research
+    \item Publication of anonymized game data for scientific study
+    \item Development of educational resources based on Trust16 insights
 \end{itemize}
 
 \subsection{Phase 5 (Advanced Features)}
 \begin{itemize}
-\item Cross-chain gameplay possibilities
-\item Enhanced NFT integration with trait-based collectibles
-\item Exploration of governance mechanisms for long-term players
+    \item Cross-chain gameplay possibilities
+    \item Enhanced NFT integration with trait-based collectibles
+    \item Exploration of governance mechanisms for long-term players
 \end{itemize}
 
 \section{Conclusion}
 
 Trust16 represents a pioneering effort in blockchain gaming, blending sophisticated game theory with cutting-edge technology. By creating a platform that is simultaneously a game, a social experiment, and a research tool, Trust16 aims to push the boundaries of what's possible in the realm of decentralized applications.
 
-The game's unique features, including its 16 dynamic character traits, sophisticated tokenomics, and seasonal play system, provide a rich and engaging player experience. At the same time, the focus on data collection and analysis for social good positions Trust16 as more than just a game—it's a potential catalyst for understanding and improving human cooperation and trust dynamics.
+The game's unique features, including its community-boosting tokenomics, dynamic character traits, sophisticated reputation system, and content creator campaign, provide a rich and engaging player experience. At the same time, the focus on data collection and analysis for social good positions Trust16 as more than just a game—it's a potential catalyst for understanding and improving human cooperation and trust dynamics.
 
 As we move forward, we invite players, developers, researchers, and institutions to join us in exploring the fascinating world of Trust16. Together, we can not only enjoy a compelling game but also contribute to meaningful insights that could shape our understanding of human behavior and social interactions in the digital age.
 
