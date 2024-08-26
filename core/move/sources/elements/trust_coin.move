@@ -3,6 +3,10 @@
     
     - transfer mechanism:
     - minting mechanism: (exchange data)
+
+    TODO:
+			- remove entry keyword from the mint function
+			- mint function should mint the double of the amount. make the function returns that amount. 
 */
 module trust_16::trust_coin {
     use aptos_framework::aptos_coin::{Self, AptosCoin as APT};
