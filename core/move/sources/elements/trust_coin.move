@@ -163,13 +163,13 @@ module trust_16::trust_coin {
         assert!(object::is_owner<Metadata>(metadata, addr), ENOT_OWNER);
     }
 
-    public fun assert_is_pauser(signer_ref: &signer) acquires Roles {
+    public fun assert_pauser(signer_ref: &signer) acquires Roles {
         let signer_addr = signer::address_of(signer_ref);
         let roles = borrow_global<Roles>(coin_address());
         assert!(vector::contains(&roles.pausers, &signer_addr), EUNAUTHORIZED);
     }
 
-    public fun assert_is_denylister(signer_ref: &signer) acquires Roles {
+    public fun assert_denylister(signer_ref: &signer) acquires Roles {
         let signer_addr = signer::address_of(signer_ref);
         let roles = borrow_global<Roles>(coin_address());
         assert!(vector::contains(&roles.denylisters, &signer_addr), EUNAUTHORIZED);
@@ -342,7 +342,7 @@ module trust_16::trust_coin {
     public entry fun add_to_denylist(denylister: &signer, account: address) acquires Management, Roles, State {
         let fa_address = object::object_address<Metadata>(&metadata());
         assert_not_paused();
-        assert_is_denylister(denylister);
+        assert_denylister(denylister);
 
         let freeze_ref = &borrow_global<Management>(fa_address).transfer_ref;
         primary_fungible_store::set_frozen_flag(freeze_ref, account, true);
@@ -365,7 +365,7 @@ module trust_16::trust_coin {
     public entry fun remove_from_denylist(denylister: &signer, account: address) acquires Management, Roles, State {
         let fa_address = coin_address();
         assert_not_paused();
-        assert_is_denylister(denylister);
+        assert_denylister(denylister);
 
         let freeze_ref = &borrow_global<Management>(fa_address).transfer_ref;
         primary_fungible_store::set_frozen_flag(freeze_ref, account, false);
