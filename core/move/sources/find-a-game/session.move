@@ -6,6 +6,9 @@
     - resources: Containting the the addresses of matched wallets
     - The deposited amount
     - The game type
+
+    TODO: 
+        - debate on whether we delete Badge and use tracker.move instead
 */
 
 module trust_16::match {
@@ -18,6 +21,8 @@ module trust_16::match {
     use aptos_std::option::{Self, Option};
     // use std::signer;
     use std::vector;
+
+    friend trust_16::mechanics;
 
     // ---------
     // Constants
@@ -140,6 +145,24 @@ module trust_16::match {
         let time_now_seconds = timestamp::now_seconds();
         assert!(session_info.created_at <= time_now_seconds, ETIME_INVALID);
         session_info.started_at = option::some(time_now_seconds);
+    }
+
+    /// Function to end the session
+    /// This will trigger the game to end
+    public(friend) fun end_session(session_id: address) acquires Badge, SessionInfo, GlobalInfo {
+        // ensure session exists
+        let session_info = borrow_global_mut<SessionInfo>(session_id);
+        // remove badges from players
+        for (i in 0..vector::length(&session_info.players)) {
+            let player_addr = *vector::borrow(&session_info.players, i);
+            remove_badges_from_players(player_addr);
+        };
+        // remove the session from the global info
+        let global_info = borrow_global_mut<GlobalInfo>(@trust_16);
+        let active_sessions = &mut global_info.active_sessions;
+        let (session_exists, index) = smart_vector::index_of(active_sessions, &session_id);
+        assert!(session_exists, ESESSION_INVALID);
+        smart_vector::remove(active_sessions, index);
     }
 
     /// Function to get the signer of the session manager object
