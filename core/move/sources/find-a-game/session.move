@@ -9,6 +9,7 @@
 
     TODO: 
         - debate on whether we delete Badge and use tracker.move instead
+        - add events
 */
 
 module trust_16::match {
@@ -76,14 +77,29 @@ module trust_16::match {
     // Asserts
     // -------
 
+    /// sanity check to ensure the session is valid
+    public fun assert_session_valid(session_id: address) {
+        assert!(session_exists(session_id), ESESSION_INVALID);
+    }
+
     /// Sanity check to ensure players are eligible to play
-    fun assert_players_eligibility(players: vector<address>) {
+    public fun assert_players_eligibility(players: vector<address>) {
         for (i in 0..vector::length(&players)) {
             let player_addr = *vector::borrow(&players, i);
             // ensure player are not in any active game
             assert!(!has_active_session(player_addr), EPLAYER_HAS_ACTIVE_GAME);
         }
     }
+
+    /// Sanity check to ensure the player's address is in the session
+    public fun assert_player_in_session(players: vector<address>, session_id: address) acquires Badge {
+        for (i in 0..vector::length(&players)) {
+            let player_addr = *vector::borrow(&players, i);
+            let maybe_session_id = *option::borrow(&active_session_id(player_addr));
+            assert!(maybe_session_id == session_id, ESESSION_INVALID);
+        }  
+    }
+    
 
     // --------------------
     // Initializer Function
@@ -103,17 +119,13 @@ module trust_16::match {
     /// Returns the session id
     /// The number of players and the deposit amount are specific to a game type and are defined in the game type module
     public(friend) fun create_session(
-        players: vector<address>,
-        deposits: FungibleAsset
+        players: vector<address>
     ): address {
         // eligibility check
         assert_players_eligibility(players);
         // create a session object and deposit the amount
         let constructor_ref = &object::create_object(@trust_16);
         let id = object::address_from_constructor_ref(constructor_ref);
-        let fa_metadata = fungible_asset::metadata_from_asset(&deposits);
-        let store = primary_fungible_store::create_primary_store(id, fa_metadata);
-        dispatchable_fungible_asset::deposit(store, deposits);
         // create session info resource and move it to the session object
         move_to(
             &object::generate_signer(constructor_ref),
@@ -130,16 +142,11 @@ module trust_16::match {
 
     /// Function to trigger when all players have joined the game
     /// This will trigger the game to start
-    public(friend) fun start_session(session_id: address) acquires Badge, SessionInfo {
+    public(friend) fun start_session(session_id: address) acquires SessionInfo {
         // ensure all players have joined
         let session_info = borrow_global<SessionInfo>(session_id);
-        let players = &session_info.players;
-        for (i in 0..vector::length(players)) {
-            let player_addr = *vector::borrow(players, i);
-            let maybe_session_id = *option::borrow(&active_session_id(player_addr));
-            assert!(has_active_session(player_addr), EPLAYER_HAS_ACTIVE_GAME);
-            assert!(maybe_session_id == session_id, ESESSION_INVALID);
-        };
+        let players = session_info.players;
+        assert_players_eligibility(players);
         // trigger the game to start
         let session_info = borrow_global_mut<SessionInfo>(session_id);
         let time_now_seconds = timestamp::now_seconds();
@@ -175,6 +182,11 @@ module trust_16::match {
     // Public Functions
     // ----------------
 
+    /// Returns if the session exists
+    public fun session_exists(session_id: address): bool {
+        exists<SessionInfo>(session_id)
+    }
+
     /// Returns true if a player is in a session
     public fun has_active_session(player_addr: address): bool {
         exists<Badge>(player_addr)
@@ -188,13 +200,6 @@ module trust_16::match {
         } else {
             option::none()
         }
-    }
-
-    /// Returns the primary store object for a given session
-    /// Useful to track the balance of the session
-    public fun session_primary_store(session_id: address, fa_metadata: Object<Metadata>): Object<fungible_asset::FungibleStore> {
-        // TODO: ensure session exists
-        primary_fungible_store::primary_store<Metadata>(session_id, fa_metadata)
     }
 
     // ----------------
