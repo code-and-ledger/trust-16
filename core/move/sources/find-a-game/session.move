@@ -91,12 +91,19 @@ module trust_16::match {
         }
     }
 
-    /// Sanity check to ensure the player's address is in the session
-    public fun assert_player_in_session(players: vector<address>, session_id: address) acquires Badge {
+    /// Sanity check to ensure the player's address is registered in the session 
+    public fun assert_player_registered_in_session(player_addr: address, session_id: address) acquires SessionInfo {
+        let session_info = borrow_global<SessionInfo>(session_id);
+        let players = session_info.players;
+        let (player_exists, _) = vector::index_of(&players, &player_addr);
+        assert!(player_exists, ESESSION_INVALID);
+    }
+
+    /// Sanity check to ensure the player is in the session
+    public fun assert_player_active_in_session(players: vector<address>, session_id: address) acquires Badge {
         for (i in 0..vector::length(&players)) {
             let player_addr = *vector::borrow(&players, i);
-            let maybe_session_id = *option::borrow(&active_session_id(player_addr));
-            assert!(maybe_session_id == session_id, ESESSION_INVALID);
+            assert!(player_is_in_session(player_addr, session_id), ESESSION_INVALID);
         }  
     }
     
@@ -202,17 +209,33 @@ module trust_16::match {
         }
     }
 
+    /// Returns true if the player is in the session
+    public fun player_is_in_session(player_addr: address, session_id: address): bool acquires Badge {
+        if (has_active_session(player_addr)) {
+            let badge = borrow_global<Badge>(player_addr);
+            badge.session_id == session_id
+        } else {
+            false
+        }
+    }
+
+    /// Returns whether the session is active or not
+    public fun is_active(session_id: address): bool acquires GlobalInfo {
+        let global_info = borrow_global<GlobalInfo>(@trust_16);
+        smart_vector::contains(&global_info.active_sessions, &session_id)
+    }
+
     // ----------------
     // Helper Functions
     // ----------------
 
     /// Internal function to add badges to players joining a session, disallowing them to join another session
-    fun add_badge_to_player(player_signer_ref: &signer, session_id: address) {
-        move_to(player_signer_ref, Badge { session_id });  
+    public(friend) fun add_badge_to_player(signer_ref: &signer, session_id: address) {
+        move_to(signer_ref, Badge { session_id });  
     }
 
     /// Internal function to remove badges from players, allowing them to leave the session
-    fun remove_badges_from_players(player_addr: address) acquires Badge {
+    public(friend) fun remove_badges_from_players(player_addr: address) acquires Badge {
         let Badge { session_id: _ } = move_from<Badge>(player_addr);
     }
             

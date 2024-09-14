@@ -7,3 +7,14 @@
     - ads
     - manual deposits by anyone
 */
+
+module trust_16::rewards_pool {
+
+
+
+
+    public fun pool_address(): address {
+        // TODO: implement
+        @trust_16
+    }
+}
