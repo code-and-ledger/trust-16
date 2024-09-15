@@ -88,8 +88,8 @@ module trust_16::mechanics {
         player: address,
         round_index: u64,
         decision: vector<u8>,
-        is_first_submitter: bool,
-        is_last_submitter: bool,
+        is_first_submitted: bool,
+        is_last_submitted: bool,
     }
 
     // -------
@@ -171,14 +171,17 @@ module trust_16::mechanics {
         round_index: u64,
         decision: vector<u8>
     ) acquires GameInfo {
-        let is_first_submitter: bool;
-        let is_last_submitter: bool;
-        (is_first_submitter, is_last_submitter) = if (current_round_index(session_id) == 0) {
+        let is_first_submitted: bool;
+        let is_last_submitted: bool;
+        let signer_addr = signer::address_of(signer_ref);
+        (is_first_submitted, is_last_submitted) = if (is_first_submitted(session_id, round_index)) {
             submit_first_decision(signer_ref, session_id, round_index, decision);
             (true, false)
-        } else if (current_round_index(session_id) == rounds_count(session_id) ) {
+        // last submitter
+        } else if (is_last_submitted(session_id, round_index)) {
             submit_last_decision(signer_ref, session_id, round_index, decision);
             (false, true)
+        // middle submitter
         } else {
             submit_decision_internal(signer_ref, session_id, round_index, decision);
             (false, false)
@@ -189,8 +192,8 @@ module trust_16::mechanics {
             player: signer::address_of(signer_ref),
             round_index,
             decision,
-            is_first_submitter,
-            is_last_submitter,
+            is_first_submitted,
+            is_last_submitted,
         });
     }
 
@@ -211,8 +214,9 @@ module trust_16::mechanics {
         assert!(is_active(session_id, round_index), EROUND_INVALID);
         assert!(round_index == current_round_index(session_id), EROUND_INVALID);
 
-        // TODO: store the decision
-        // TODO: update the balances tracker
+        // store the decision
+        let mut_round = borrow_round_mut(session_id, round_index);
+        smart_table::upsert(&mut mut_round.decisions, signer_addr, decision);
     }
 
     /// Submit the first decision of the round
@@ -223,7 +227,7 @@ module trust_16::mechanics {
         session_id: address,
         round_index: u64,
         decision: vector<u8>
-    )  {
+    ) acquires GameInfo {
         // initialize round and push it to the rounds vector
         initialize_round(session_id, round_index);
         // submit the decision
@@ -262,13 +266,16 @@ module trust_16::mechanics {
         // TODO: emit event
     }
 
+    /// Finish the round
+    /// Triggered when submit_last_decision is called
+    /// 1. add hash_key to the Round resource via submit_pepper
+
     /// TODO: update balances_tracker from round
 
     /// TODO: Reveal decisions and update balances_tracker
     /// Triggered when submit_last_decision is called
     /// 1. add hash_key to the HashedDecision resource
-    /// 2. update in-round balances tracker
-    /// 3. update the balances tracker from game info
+    /// 2. update in-round balances tracker and append them to the balances tracker from game info
     
 
     /// TODO: Finish the game and distribute the rewards
@@ -404,6 +411,20 @@ module trust_16::mechanics {
         };
         let mut_game_info = borrow_global_mut<GameInfo>(session_id);
         vector::push_back(&mut mut_game_info.rounds, round);
+    }
+
+    /// Helper function to check if the first submitter in the round at a given index has submitted a decision
+    fun is_first_submitted(session_id: address, round_index: u64): bool acquires GameInfo {
+        let round = borrow_round(session_id, round_index);
+        if (smart_table::length(&round.decisions) == 0) 
+        { true } else { false }
+    }
+
+    /// Helper function to check if submitter is the last submitter in the round at a given index
+    fun is_last_submitted(session_id: address, round_index: u64): bool acquires GameInfo {
+        let round = borrow_round(session_id, round_index);
+        if ((smart_table::length(&round.decisions) + 1) == (vector::length(&session::players(session_id)))) 
+        { true } else { false }
     }
 
     // ----------
