@@ -12,7 +12,7 @@
         - add events
 */
 
-module trust_16::match {
+module trust_16::session {
     use aptos_framework::dispatchable_fungible_asset;
     use aptos_framework::fungible_asset::{Self, Metadata, FungibleAsset};
     use aptos_framework::object::{Self, Object};
@@ -223,6 +223,12 @@ module trust_16::match {
     public fun is_active(session_id: address): bool acquires GlobalInfo {
         let global_info = borrow_global<GlobalInfo>(@trust_16);
         smart_vector::contains(&global_info.active_sessions, &session_id)
+    }
+
+    /// Returns the addresses of the players in the session
+    public fun players(session_id: address): vector<address> acquires SessionInfo {
+        let session_info = borrow_global<SessionInfo>(session_id);
+        session_info.players
     }
 
     // ----------------
