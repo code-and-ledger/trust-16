@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import Image from 'next/image';
 import Main from './Main';  // Assuming Main component is in the same directory
 import SplashScreen from './splash-screen';
+import { EvervaultCard} from './ui/evervault-card';
+import GameModeSelector from './game-mode-selector';
 
 const GameModeCard: React.FC<{ mode: string }> = ({ mode }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -24,54 +25,59 @@ const GameModeCard: React.FC<{ mode: string }> = ({ mode }) => {
 
 const LandingPage: React.FC = () => {
     return (
-        <>{ false && <SplashScreen />}
-        { true &&<Main width="80vw" height="70vh">
-           
-            <div className="w-full h-full p-4 flex flex-col gap-4">
-                {/* Rewards pool liquidity */}
-                <Card className="w-full">
-                    <CardContent className="p-2 flex justify-between items-center">
-                        <p className="text-sm font-semibold">Rewards pool liquidity</p>
-                        <p className="text-lg font-bold">$$$$$$$$$$$$$$$$$$$$$$$$$</p>
-                    </CardContent>
-                </Card>
+        <>{false && <SplashScreen />}
+            {true && <Main width="80vw" height="70vh">
 
-                {/* Active players, Total games, Power-up section */}
-                <div className="flex gap-4">
-                    <Card className="flex-1">
-                        <CardContent className="p-3 flex flex-row justify-between items-center">
-                            <p className="text-sm font-semibold">Active players</p>
-                            <p className="text-lg font-bold">1,234</p>
-                        </CardContent>
-                    </Card>
-                    <Card className="flex-1">
-                        <CardContent className="p-3 flex flex-row justify-between items-center">
-                            <p className="text-sm font-semibold">Total games</p>
-                            <p className="text-lg font-bold">5,678</p>
-                        </CardContent>
-                    </Card>
-                    <Card className="flex-1 border-red-500">
-                        <CardContent className="p-3 flex flex-row justify-between items-center">
-                            <p className="text-sm font-semibold">Power-up</p>
-                            <p className="text-lg font-bold">Available</p>
-                        </CardContent>
-                    </Card>
-                </div>
-                <div className="flex-1  rounded-lg flex items-center justify-center">
+                <div className="w-full h-full p-4 flex flex-col gap-4">
+                    {/* Rewards pool liquidity */}
 
-                    {/* Game modes selector */}
-                    <div className="flex-1 rounded-lg flex flex-col bg-white justify-between items-center pb-9" >
-                        <h3 className="text-lg font-semibold mb-2">Select Game Mode</h3>
-                        <div className="flex gap-4 flex-2">
-                            <GameModeCard mode="Campaign" />
-                            <GameModeCard mode="Short" />
-                            <GameModeCard mode="5-minutes" />
-                            <GameModeCard mode="Tournament" />
+
+                    {/* Active players, Total games, Power-up section */}
+                    <div className="flex gap-4">
+                        <Card className="bg-white flex-1 ">
+                            <CardContent className="p-2 flex justify-between items-center">
+                                <p className="text-sm font-semibold">Rewards pool liquidity</p>
+                                <p className="text-lg font-bold">$$$$$$$$$$$</p>
+                            </CardContent>
+                        </Card>
+                        <Card className="flex-1">
+                            <CardContent className="p-3 flex flex-row justify-between items-center">
+                                <p className="text-sm font-semibold">Active players</p>
+                                <p className="text-lg font-bold">1,234</p>
+                            </CardContent>
+                        </Card>
+                        <Card className="flex-1 text-white bg-black">
+                            <CardContent className="p-3 flex flex-row justify-between items-center">
+                                <p className="text-sm font-semibold">Total games</p>
+                                <p className="text-lg font-bold">5,678</p>
+                            </CardContent>
+                        </Card>
+                        <Card className="flex-1 text-white bg-black border-red-500">
+                            <CardContent className="p-3 flex flex-row justify-between items-center">
+                                <p className="text-sm font-semibold">Power-up</p>
+                                <p className="text-lg font-bold">Available</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    <div className="flex-1 rounded-lg flex items-center justify-center">
+                            <GameModeSelector   />
+                    </div>
+                    <div className="w-full flex justify-start">
+                        <div className="w-1/2 flex items-center justify-center">
+                            <div className="max-w-sm mx-auto relative h-[20rem] mb-10">
+                                <EvervaultCard
+                                    imageUrl="/chicken.jpg"
+                                    level={5}
+                                    money={10000}
+                                />
+                            </div>
                         </div>
                     </div>
+
+
+
                 </div>
-            </div>
-        </Main>}
+            </Main>}
         </>
     );
 };
