@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from 'next/image';
 import Main from './Main';  // Assuming Main component is in the same directory
+import SplashScreen from './splash-screen';
 
 const GameModeCard: React.FC<{ mode: string }> = ({ mode }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -23,7 +24,9 @@ const GameModeCard: React.FC<{ mode: string }> = ({ mode }) => {
 
 const LandingPage: React.FC = () => {
     return (
-        <Main width="80vw" height="70vh">
+        <>{ false && <SplashScreen />}
+        { true &&<Main width="80vw" height="70vh">
+           
             <div className="w-full h-full p-4 flex flex-col gap-4">
                 {/* Rewards pool liquidity */}
                 <Card className="w-full">
@@ -68,7 +71,8 @@ const LandingPage: React.FC = () => {
                     </div>
                 </div>
             </div>
-        </Main>
+        </Main>}
+        </>
     );
 };
 
