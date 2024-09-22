@@ -24,6 +24,7 @@ module trust_16::mechanics {
     use aptos_framework::smart_table::{Self, SmartTable};
     use aptos_framework::timestamp;
     use aptos_std::simple_map::{Self, SimpleMap};
+    use aptos_std::type_info::TypeInfo;
     use std::event;
     use std::option;
     use std::signer;
@@ -32,6 +33,9 @@ module trust_16::mechanics {
     use trust_16::rewards_pool;
     use trust_16::trust_coin;
     use trust_16::utils;
+
+    friend trust_16::long_game;
+    friend trust_16::short_game;
 
     // ------
     // Errors
@@ -56,6 +60,7 @@ module trust_16::mechanics {
 
     /// Global storage for the game data
     struct GameInfo has key {
+        type: TypeInfo,
         rounds_count: u64,
         rounds: vector<Round>,
         // initial balances of the players as well as the rewards pool
@@ -113,19 +118,22 @@ module trust_16::mechanics {
     // ---------------
 
     /// Creates the game for matchmaking
+    /// Returns the session id
     public(friend) fun prepare_game(
+        type: TypeInfo,
         players: vector<address>,
         rounds_count: u64,
-        duration: vector<u64>
+        durations: vector<u64>
     ) {
         let session_id = session::create_session(players);
         let session_signer_ref = &session::session_signer(session_id);
         // ensure the length of the duration vector is as expected
-        assert!(vector::length(&duration) == rounds_count, ELENGTH_MISMATCH);
+        assert!(vector::length(&durations) == rounds_count, ELENGTH_MISMATCH);
         let obj_constructor = object::create_object(session_id);
         move_to(
             session_signer_ref,
             GameInfo {
+                type,
                 rounds_count,
                 rounds: vector::empty<Round>(),
                 initial_balances: smart_table::new<address, u64>(),
@@ -134,7 +142,7 @@ module trust_16::mechanics {
             }
         );
 
-        // Emit event
+        /// TODO: emit event indicating this game is short
     }
 
     /// Join the game
@@ -314,41 +322,47 @@ module trust_16::mechanics {
         vector::length(&game_info.rounds) - 1
     }
 
+    /// Helper function to get the game type
+    public(friend) fun game_type(session_id: address): TypeInfo acquires GameInfo {
+        let game_info = borrow_global<GameInfo>(session_id);
+        game_info.type
+    }
+
     /// Helper function to get the start time of a round at a given index
-    fun round_start_time(session_id: address, round_index: u64): u64 acquires GameInfo {
+    public(friend) fun round_start_time(session_id: address, round_index: u64): u64 acquires GameInfo {
         let round = borrow_round(session_id, round_index);
         round.start_time
     }
 
     /// Helper function to get the duration of a round at a given index
-    fun round_duration(session_id: address, round_index: u64): u64 acquires GameInfo {
+    public(friend) fun round_duration(session_id: address, round_index: u64): u64 acquires GameInfo {
         let round = borrow_round(session_id, round_index);
         round.duration
     }
 
     /// Helper function to get the decisions of a round at a given index
-    fun round_hashed_decisions_map(session_id: address, round_index: u64): SimpleMap<address, vector<u8>> acquires GameInfo {
+    public(friend) fun round_hashed_decisions_map(session_id: address, round_index: u64): SimpleMap<address, vector<u8>> acquires GameInfo {
         let round = borrow_round(session_id, round_index);
         smart_table::to_simple_map(&round.decisions)
     }
 
     /// Helper function to calculate the round deposit amount per player
     /// initial_balances[player] / rounds_count (can query at index 1 or up, since index 0 is the balance from universal reward pool)
-    fun player_round_deposit_amount(session_id: address, player_addr: address): u64 acquires GameInfo {
+    public(friend) fun player_round_deposit_amount(session_id: address, player_addr: address): u64 acquires GameInfo {
         let game_info = borrow_global<GameInfo>(session_id);
         *smart_table::borrow(&game_info.initial_balances, player_addr) / rounds_count(session_id)
     }
 
     /// Helper function to calculate the round deposit amount assuming all players have the same deposit amount
     /// initial_balances[any_player] / rounds_count
-    fun round_deposit_amount(session_id: address): u64 acquires GameInfo {
+    public(friend) fun round_deposit_amount(session_id: address): u64 acquires GameInfo {
         let game_info = borrow_global<GameInfo>(session_id);
         let any_player = *smart_table::borrow(&game_info.initial_balances, *vector::borrow(&session::players(session_id), 0));
         (any_player / rounds_count(session_id))
     }
 
     /// Helper function to return all the players' deposit amounts in round
-    fun round_total_players_deposit_amount(session_id: address): u64 acquires GameInfo {
+    public(friend) fun round_total_players_deposit_amount(session_id: address): u64 acquires GameInfo {
         let players = session::players(session_id);
         let total = 0;
         for (i in 0..vector::length(&players)) {
@@ -360,7 +374,7 @@ module trust_16::mechanics {
 
     /// Helper function to calculate the round deposit amount from the universal reward pool
     /// should be equal to the total total_deposit_amounts from players
-    fun round_rewards_pool_deposit_amount(session_id: address): u64 acquires GameInfo {
+    public(friend) fun round_rewards_pool_deposit_amount(session_id: address): u64 acquires GameInfo {
         let game_info = borrow_global<GameInfo>(session_id);
         let rewards_pool_deposit = *smart_table::borrow(&game_info.initial_balances, rewards_pool::pool_address());
         (rewards_pool_deposit / rounds_count(session_id))
@@ -368,7 +382,7 @@ module trust_16::mechanics {
 
     /// Helper function to calculate the total in-round rewards 
     /// total_in_round_rewards = round_deposit_amount * players_count + round_rewards_pool_deposit_amount
-    fun total_in_round_rewards(session_id: address): u64 acquires GameInfo {
+    public(friend) fun total_in_round_rewards(session_id: address): u64 acquires GameInfo {
         let players_count = vector::length(&session::players(session_id));
         let round_rewards_pool_deposit = round_rewards_pool_deposit_amount(session_id);
         let round_deposit_amount = round_deposit_amount(session_id);
@@ -377,12 +391,12 @@ module trust_16::mechanics {
 
     /// Helper function to check whether the round is active
     /// active if the current time is within the round duration
-    fun is_active(session_id: address, round_index: u64): bool acquires GameInfo {
+    public(friend) fun is_active(session_id: address, round_index: u64): bool acquires GameInfo {
         timestamp::now_seconds() < (round_start_time(session_id, round_index) + round_duration(session_id, round_index))
     }
 
     /// Helper function to check whether all participants have submitted their decisions at a given round index
-    fun are_all_decisions_submitted(session_id: address, round_index: u64): bool acquires GameInfo {
+    public(friend) fun are_all_decisions_submitted(session_id: address, round_index: u64): bool acquires GameInfo {
         let round = borrow_round(session_id, round_index);
         let submitters = smart_table::keys(&round.decisions);
         let participants = session::players(session_id);
@@ -400,7 +414,7 @@ module trust_16::mechanics {
     }
 
     /// Helper function to reveal the decisions
-    fun reveal_decisions_in_round(session_id: address, round_index: u64): SimpleMap<address, bool> acquires GameInfo {
+    public(friend) fun reveal_decisions_in_round(session_id: address, round_index: u64): SimpleMap<address, bool> acquires GameInfo {
         let round = borrow_round(session_id, round_index);
         let pepper = *option::borrow(&round.pepper);
         let (submitters, hashed_decisions) = simple_map::to_vec_pair(round_hashed_decisions_map(session_id, round_index));
@@ -437,14 +451,14 @@ module trust_16::mechanics {
     }
 
     /// Helper function to check if the first submitter in the round at a given index has submitted a decision
-    fun is_first_submitted(session_id: address, round_index: u64): bool acquires GameInfo {
+    public(friend) fun is_first_submitted(session_id: address, round_index: u64): bool acquires GameInfo {
         let round = borrow_round(session_id, round_index);
         if (smart_table::length(&round.decisions) == 0) 
         { true } else { false }
     }
 
     /// Helper function to check if submitter is the last submitter in the round at a given index
-    fun is_last_submitted(session_id: address, round_index: u64): bool acquires GameInfo {
+    public(friend) fun is_last_submitted(session_id: address, round_index: u64): bool acquires GameInfo {
         let round = borrow_round(session_id, round_index);
         if ((smart_table::length(&round.decisions) + 1) == (vector::length(&session::players(session_id)))) 
         { true } else { false }
@@ -529,7 +543,7 @@ module trust_16::mechanics {
         for (i in 0..vector::length(&addresses)) {
             let addr = *vector::borrow(&addresses, i);
             let balance = *smart_table::borrow(balances_tracker, addr);
-            // fungible_asset::transfer(&game_info.pool, addr, balance);
+            // TODO: 
         }
     }
 
