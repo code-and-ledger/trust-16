@@ -11,6 +11,8 @@ module trust_16::short_game {
     use std::vector;
     use trust_16::mechanics;
 
+    friend trust_16::router;
+
     // ---------
     // Constants
     // ---------
