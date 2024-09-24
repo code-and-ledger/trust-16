@@ -11,6 +11,7 @@ module trust_16::rewards_pool {
 
     use aptos_framework::dispatchable_fungible_asset;
     use aptos_framework::fungible_asset::{Self, FungibleAsset, FungibleStore, Metadata};
+    use aptos_framework::primary_fungible_store;
     use std::object::{Self, Object};
     use std::signer;
     use trust_16::trust_coin;
@@ -32,10 +33,9 @@ module trust_16::rewards_pool {
 
     /// Global storage for the rewards pool
     struct Info has key {
-        admin_addr: address,
         store: Object<FungibleStore>,
         // used for the withdraws
-        extend_ref: object::ExtendRef,
+        extend_ref: object::ExtendRef
     }
 
     // ------
@@ -49,17 +49,14 @@ module trust_16::rewards_pool {
     // --------------------
 
     /// Initializes the info resource; callable by the time of deployment
-    public(friend) fun init(obj_signer: &signer) {
-        trust_coin::assert_withdrawer(obj_signer);
-        let obj_addr = signer::address_of(obj_signer);
-        let obj_constructor = object::create_object(obj_addr);
+    public(friend) fun init(deployer: &signer) {
         let trust_coin_metadata = trust_coin::metadata();
+        let withdraw_constructor_ref = &object::create_named_object(deployer, trust_coin::withdraw_seed());
         move_to(
-            obj_signer,
+            deployer,
             Info { 
-                admin_addr: obj_addr,
-                store: fungible_asset::create_store<Metadata>(&obj_constructor, trust_coin_metadata), 
-                extend_ref: object::generate_extend_ref(&obj_constructor)
+                store: fungible_asset::create_store<Metadata>(withdraw_constructor_ref, trust_coin_metadata), 
+                extend_ref: object::generate_extend_ref(withdraw_constructor_ref)
             }  
         );
     }
@@ -75,16 +72,19 @@ module trust_16::rewards_pool {
     }
 
     /// Deposits the amount to the rewards pool
-    public(friend) fun deposit(fa: FungibleAsset) acquires Info {
+    public(friend) fun deposit(amount: u64, from: address) acquires Info {
         let info = borrow_global<Info>(@trust_16);
+        let withdrawer_signer_ref = &object::generate_signer_for_extending(&info.extend_ref);
+        let from_primary_store = primary_fungible_store::primary_store(from, trust_coin::metadata());
+        let fa = dispatchable_fungible_asset::withdraw(withdrawer_signer_ref, from_primary_store, amount);
         dispatchable_fungible_asset::deposit(info.store, fa);
     }
 
     /// Withdraws the amount from the rewards pool
     public(friend) fun withdraw(amount: u64): FungibleAsset acquires Info {
         let info = borrow_global<Info>(@trust_16);
-        let signer_ref = &object::generate_signer_for_extending(&info.extend_ref);
-        dispatchable_fungible_asset::withdraw(signer_ref, info.store, amount)
+        let withdrawer_signer_ref = &object::generate_signer_for_extending(&info.extend_ref);
+        dispatchable_fungible_asset::withdraw(withdrawer_signer_ref, info.store, amount)
     }
 
     /// Returns the object of the rewards pool store
@@ -98,4 +98,11 @@ module trust_16::rewards_pool {
         let info = borrow_global<Info>(@trust_16);
         object::object_address(&info.store)
     }
+
+    // ---------
+    // Unit Test
+    // ---------
+
+    #[test_only]
+    friend trust_16::test_utils;
 }

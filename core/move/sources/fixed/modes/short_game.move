@@ -41,7 +41,7 @@ module trust_16::short_game {
     // ---------------
     
     /// TODO: prepare game
-    public(friend) fun prepare_game(players: vector<address>) {
+    public(friend) fun prepare_game(players: vector<address>): address {
         assert!(vector::length(&players) == (PLAYERS_COUNT as u64), EPLAYERS_COUNT_INVALID);
         let durations = vector::empty<u64>();
         for (i in 0..ROUNDS_COUNT) {
@@ -53,7 +53,13 @@ module trust_16::short_game {
             players,
             (ROUNDS_COUNT as u64),
             durations
-        );
-        
+        )
     }
+
+    // ----------
+    // Unit Tests
+    // ----------
+
+    #[test_only]
+    friend trust_16::test_short_game;
 }

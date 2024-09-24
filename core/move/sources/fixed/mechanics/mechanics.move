@@ -16,6 +16,9 @@
         - add events
         - No asserts in internal functions
         - discuss: round starts when the first decision is submitted (ease of implementation)
+        - implement functions to handle edge cases:
+            - in-game leaving
+            - not submitting a decision in time
 */
 
 module trust_16::mechanics {
@@ -53,6 +56,8 @@ module trust_16::mechanics {
     const EPEPPER_SUBMITTED: u64 = 5;
     /// Hash mismatch
     const E_HASH_MISMATCH: u64 = 6;
+    /// The game is not finished yet
+    const EGAME_NOT_FINISHED: u64 = 7;
 
     // ---------
     // Resources
@@ -62,6 +67,7 @@ module trust_16::mechanics {
     struct GameInfo has key {
         type: TypeInfo,
         rounds_count: u64,
+        rounds_durations: vector<u64>,
         rounds: vector<Round>,
         // initial balances of the players as well as the rewards pool
         initial_balances: SmartTable<address, u64>,
@@ -74,7 +80,6 @@ module trust_16::mechanics {
     /// Global storage for the round data
     struct Round has key, store {
         start_time: u64, // in seconds
-        duration: u64, // in seconds
         // useful to know when to reveal the decision inorder to avoid exposing the pepper
         allow_reveal: bool,
         pepper: option::Option<vector<u8>>,
@@ -104,11 +109,13 @@ module trust_16::mechanics {
     /// - the current time is within the round duration
     public fun assert_round_valid(session_id: address, round_index: u64) acquires GameInfo {
         let game_info = borrow_global<GameInfo>(session_id);
-        let round_time = round_start_time(session_id, round_index);
+        let round_time = if (round_index == 0) {
+            round_start_time(session_id, 0)
+        } else {
+            round_start_time(session_id, (round_index - 1)) + round_duration(session_id, round_index)
+        };
         let round_duration = round_duration(session_id, round_index);
         let current_time = timestamp::now_seconds();
-        // index check
-        assert!(round_index == current_round_index(session_id), EROUND_INVALID);
         // time check
         assert!(current_time >= round_time && current_time <= round_time + round_duration, EROUND_INVALID);
     }
@@ -123,26 +130,48 @@ module trust_16::mechanics {
         type: TypeInfo,
         players: vector<address>,
         rounds_count: u64,
-        durations: vector<u64>
-    ) {
+        rounds_durations: vector<u64>
+    ): address {
         let session_id = session::create_session(players);
         let session_signer_ref = &session::session_signer(session_id);
         // ensure the length of the duration vector is as expected
-        assert!(vector::length(&durations) == rounds_count, ELENGTH_MISMATCH);
+        assert!(vector::length(&rounds_durations) == rounds_count, ELENGTH_MISMATCH);
+        // prepare initial balances and balances tracker
+        let addresses = vector[rewards_pool::pool_address()];
+        vector::append(&mut addresses, players);
+        let balances = vector::empty<u64>();
+        for (i in 0..vector::length(&addresses)) {
+            vector::push_back(&mut balances, 0);
+        };
+        let table = smart_table::new<address, u64>();
+        let table_2 = smart_table::new<address, u64>();
+        smart_table::add_all<address, u64>(&mut table, addresses, balances);
+        smart_table::add_all<address, u64>(&mut table_2, addresses, balances);
+
         let obj_constructor = object::create_object(session_id);
         move_to(
             session_signer_ref,
             GameInfo {
                 type,
                 rounds_count,
+                rounds_durations,
                 rounds: vector::empty<Round>(),
-                initial_balances: smart_table::new<address, u64>(),
-                balances_tracker: smart_table::new<address, u64>(),
+                initial_balances: table,
+                balances_tracker: table_2,
                 pool: fungible_asset::create_store<Metadata>(&obj_constructor, trust_coin::metadata()),
             }
         );
 
+        session_id
+
         /// TODO: emit event indicating this game is short
+    }
+
+    /// Start the game
+    /// Triggered when all players have joined the game
+    public(friend) fun start_game(session_id: address) {
+        // TODO: ensure all players have joined the game
+        session::start_session(session_id);
     }
 
     /// Join the game
@@ -170,15 +199,16 @@ module trust_16::mechanics {
     public(friend) fun finish_game(session_id: address) acquires GameInfo {
         // ensure the current round is the last round
         let current_round_index = current_round_index(session_id);
-        assert!(current_round_index == rounds_count(session_id), EROUND_INVALID);
+        assert!((current_round_index + 1) == rounds_count(session_id), EGAME_NOT_FINISHED);
         // ensure the current round is finished
         assert_round_valid(session_id, current_round_index);
         // distribute the rewards
         distribute_rewards(session_id);
         // end session
         session::end_session(session_id);
-    }
+    }   
 
+    /// TODO: is_first_submitted needs revision
     public(friend) fun submit_decision(
         signer_ref: &signer,
         session_id: address,
@@ -319,7 +349,11 @@ module trust_16::mechanics {
     /// Helper function to get the current round index
     inline fun current_round_index(session_id: address): u64 acquires GameInfo {
         let game_info = borrow_global<GameInfo>(session_id);
-        vector::length(&game_info.rounds) - 1
+        if (vector::length(&game_info.rounds) == 0) {
+            0
+        } else {
+            vector::length(&game_info.rounds) - 1
+        }
     }
 
     /// Helper function to get the game type
@@ -336,8 +370,8 @@ module trust_16::mechanics {
 
     /// Helper function to get the duration of a round at a given index
     public(friend) fun round_duration(session_id: address, round_index: u64): u64 acquires GameInfo {
-        let round = borrow_round(session_id, round_index);
-        round.duration
+        let game_info = borrow_global<GameInfo>(session_id);
+        *vector::borrow(&game_info.rounds_durations, round_index)
     }
 
     /// Helper function to get the decisions of a round at a given index
@@ -439,9 +473,14 @@ module trust_16::mechanics {
 
     /// Helper function to initialize a round and push it to the rounds vector
     fun initialize_round(session_id: address, round_index: u64) acquires GameInfo {
+        let game_info = borrow_global<GameInfo>(session_id);
+        // ensure the previous round is finished
+        if (vector::length(&game_info.rounds) > 0) {
+            assert_round_valid(session_id, round_index);
+        };
+        
         let round = Round {
             start_time: timestamp::now_seconds(),
-            duration: round_duration(session_id, round_index),
             allow_reveal: false,
             pepper: option::none(),
             decisions: smart_table::new<address, vector<u8>>()
@@ -547,7 +586,34 @@ module trust_16::mechanics {
         }
     }
 
+    // --------------
+    // View Functions
+    // --------------
+
+    #[view]
+    /// Returns the current round index
+    public fun live_round_index(session_id: address): u64 acquires GameInfo {
+        current_round_index(session_id)
+    }
+
     // ----------
     // Unit tests
     // ----------
+
+    #[test_only]
+    use aptos_std::type_info;
+    
+    #[test_only]
+    friend trust_16::test_mechanics;
+
+    #[test_only]
+    friend trust_16::test_short_game;
+
+    #[test_only]
+    struct GameType has key {}
+
+    #[test_only]
+    public fun game_type_for_test(): TypeInfo {
+        type_info::type_of<GameType>()
+    }
 }

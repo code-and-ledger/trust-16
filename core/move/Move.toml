@@ -1,10 +1,10 @@
 [package]
 name = "Trust16"
-version = "1.0.0"
-authors = []
+version = "0.0.1"
+authors = ["lay (Aladeen): aladeen@codeandledger.com"]
 
 [addresses]
-trust_16 = "0x2cdf1f17ef5a45e959140abc428ba14aa6d19a1923b2f440a699c04f1930da29"
+trust_16 = "0xfeb7aabfa77c176a286b10fa0d0ed118fe309e8d900464a66630238eccd342f9"
 
 [dev-addresses]
 
