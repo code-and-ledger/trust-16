@@ -621,6 +621,13 @@ module trust_16::mechanics {
         game_info.rounds_count
     }
 
+    #[view]
+    /// Returns the hashed decision of the player at a given round index
+    public fun hashed_decision(session_id: address, round_index: u64, player_addr: address): vector<u8> acquires GameInfo {
+        let round = borrow_round(session_id, round_index);
+        *smart_table::borrow(&round.decisions, player_addr)
+    }
+
     // ----------
     // Unit tests
     // ----------
