@@ -384,7 +384,7 @@ module trust_16::trust_coin {
     }
 
     /// Add an account to the denylist. This checks that the caller is the denylister.
-    public entry fun add_to_denylist(denylister: &signer, account: address) acquires Management, Roles, State {
+    public entry fun admin_add_to_denylist(denylister: &signer, account: address) acquires Management, Roles, State {
         let fa_address = object::object_address<Metadata>(&metadata());
         assert_not_paused();
         assert_denylister(denylister);
@@ -402,14 +402,14 @@ module trust_16::trust_coin {
     }
 
     /// Add all accounts in the given list to the denylist. This checks that the caller is the denylister.
-    public entry fun add_all_to_denylist(denylister: &signer, accounts: vector<address>) acquires Management, Roles, State {
+    public entry fun admin_add_all_to_denylist(denylister: &signer, accounts: vector<address>) acquires Management, Roles, State {
         for (i in 0..vector::length(&accounts)) {
-            add_to_denylist(denylister, *vector::borrow(&accounts, i));
+            admin_add_to_denylist(denylister, *vector::borrow(&accounts, i));
         }
     }
 
     /// Remove an account from the denylist. This checks that the caller is the denylister.
-    public entry fun remove_from_denylist(denylister: &signer, account: address) acquires Management, Roles, State {
+    public entry fun admin_remove_from_denylist(denylister: &signer, account: address) acquires Management, Roles, State {
         let fa_address = coin_address();
         assert_not_paused();
         assert_denylister(denylister);
@@ -425,9 +425,9 @@ module trust_16::trust_coin {
     }
 
     /// Remove all accounts in the given list from the denylist. This checks that the caller is the denylister.
-    public entry fun remove_all_from_denylist(denylister: &signer, accounts: vector<address>) acquires Management, Roles, State {
+    public entry fun admin_remove_all_from_denylist(denylister: &signer, accounts: vector<address>) acquires Management, Roles, State {
         for (i in 0..vector::length(&accounts)) {
-            remove_from_denylist(denylister, *vector::borrow(&accounts, i));
+            admin_remove_from_denylist(denylister, *vector::borrow(&accounts, i));
         }
     }
 

@@ -58,6 +58,22 @@ module trust_16::short_game {
         )
     }
 
+    // --------------
+    // View Functions
+    // --------------
+
+    #[view]
+    /// Returns the players count required for a short game
+    public fun players_count(): u8 { PLAYERS_COUNT }
+
+    #[view]
+    /// Returns the rounds count required for a short game
+    public fun rounds_count(): u8 { ROUNDS_COUNT }
+
+    #[view]
+    /// Returns the round duration required for a short game
+    public fun round_duration(): u64 { ROUND_DURATION }
+
     // ----------
     // Unit Tests
     // ----------

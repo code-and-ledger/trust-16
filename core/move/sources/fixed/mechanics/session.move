@@ -184,20 +184,23 @@ module trust_16::session {
         object::generate_signer_for_extending(&session_info.extend_ref)
     }
 
-    // ----------------
-    // Public Functions
-    // ----------------
+    // --------------
+    // View Functions
+    // --------------
 
+    #[view]
     /// Returns if the session exists
     public fun session_exists(session_id: address): bool {
         exists<SessionInfo>(session_id)
     }
 
+    #[view]
     /// Returns true if a player is in a session
     public fun has_active_session(player_addr: address): bool {
         exists<Badge>(player_addr)
     }
 
+    #[view]
     /// Returns the active session id of a player
     public fun active_session_id(player_addr: address): Option<address> acquires Badge {
         if (has_active_session(player_addr)) {
@@ -208,6 +211,7 @@ module trust_16::session {
         }
     }
 
+    #[view]
     /// Returns true if the player is in the session
     public fun player_is_in_session(player_addr: address, session_id: address): bool acquires Badge {
         if (has_active_session(player_addr)) {
@@ -218,12 +222,14 @@ module trust_16::session {
         }
     }
 
+    #[view]
     /// Returns whether the session is active or not
     public fun is_active(session_id: address): bool acquires GlobalInfo {
         let global_info = borrow_global<GlobalInfo>(@trust_16);
         smart_vector::contains(&global_info.active_sessions, &session_id)
     }
 
+    #[view]
     /// Returns the addresses of the players in the session
     public fun players(session_id: address): vector<address> acquires SessionInfo {
         let session_info = borrow_global<SessionInfo>(session_id);
