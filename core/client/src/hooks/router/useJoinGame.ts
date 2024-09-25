@@ -4,6 +4,13 @@ import { useWallet } from '@aptos-labs/wallet-adapter-react';
 // Access fields / functions from the adapter
 const { signAndSubmitTransaction } = useWallet();
 
+/**
+ * Hook to join a game using the player's wallet.
+ * 
+ * @param accountAddress - The address of the player.
+ * @param sessionID - The ID of the session.
+ * @returns An async function to execute the operation.
+ */
 const useJoinGame = (
     accountAddress: string,
     sessionID: string

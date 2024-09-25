@@ -1,7 +1,16 @@
 import { ENDPOINTS, MODULE_NAMES } from '@/utils/constants';
-import { getPepper, hashWithPepper, storePepper } from '@/utils/encryption';
+import { hashWithPepper, storePepper } from '@/utils/encryption';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 
+/**
+ * Hook to submit a decision using the player's wallet.
+ * 
+ * @param accountAddress - The address of the player.
+ * @param sessionID - The ID of the session.
+ * @param roundIndex - The index of the round.
+ * @param decision - The decision to be submitted.
+ * @returns An async function to execute the operation.
+ */
 const useSubmitDecision = (
     accountAddress: string,
     sessionID: string,
