@@ -9,11 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aptos-labs/aptos-client": "^0.1.1",
+    "@aptos-labs/ts-sdk": "^1.28.0",
+    "@aptos-labs/wallet-adapter-react": "^3.7.0",
     "@tsparticles/engine": "^3.5.0",
     "@tsparticles/react": "^3.0.0",
+    "blakejs": "^1.2.1",
+    "dotenv": "^16.4.5",
+    "mongodb": "^6.9.0",
     "next": "14.2.5",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "winston": "^3.14.2"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",
