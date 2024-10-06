@@ -25,10 +25,10 @@ const getHashedDecision = async (
 
     const response = await aptos.view({ payload });
 
-    return response; // Returning the actual response from the view function
+    return response;
   } catch (error) {
-    console.error(`Error fetching hashed decision: ${error instanceof Error ? error.message : error}`);
-    return []; // Return a consistent type in case of an error
+    console.error(`Error fetching hashed decision: `, error);
+    return [];
   }
 };
 
