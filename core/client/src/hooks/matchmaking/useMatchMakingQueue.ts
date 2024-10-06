@@ -4,7 +4,7 @@ import { useGenerateRandomNumber } from './useGenerateRandomNumber'; // Import t
 
 const MATCH_TIMEOUT = 5; // 5 seconds for match timeout
 const MAX_SEARCH_RANGE = 500; // Limit search range expansion
-const PLAYER_COUNT_REQUIREMENT = 6; // Minimum players required for a match
+const PLAYER_COUNT_REQUIREMENT = 5; // Minimum players required for a match
 const EXPAND_TIME_LIMIT = 20; // 20 seconds before expanding search range
 let currentSearchRange = 100; // Starting range for matchmaking
 
@@ -32,17 +32,16 @@ export function useMatchmakingQueue() {
 
     // Check if there are enough players to match, else expand search range
     function checkForMatch(queue: Player[]): void {
-
-        // If fewer than PLAYER_COUNT_REQUIREMENT players, extend search range
-        if (queue.length < PLAYER_COUNT_REQUIREMENT) {
-            console.log(`Expanding search range to: ${currentSearchRange}`);
-            expandSearchRange(queue);
-        }
-
-        // Find available players (not matched)
         const availablePlayers = queue.filter(p => !p.matched);
 
-        if (availablePlayers.length >= PLAYER_COUNT_REQUIREMENT) {
+        // If fewer than PLAYER_COUNT_REQUIREMENT players, extend search range
+        if (availablePlayers.length < PLAYER_COUNT_REQUIREMENT) {
+            console.log(`Expanding search range to: ${currentSearchRange}`);
+            expandSearchRange(queue);
+            return;
+        }
+
+        if (availablePlayers.length >= 2) {
             // Randomly select two players from available players
             const firstPlayerIndex = generateRandomNumber(0, availablePlayers.length);
             let secondPlayerIndex = generateRandomNumber(0, availablePlayers.length);
@@ -57,7 +56,6 @@ export function useMatchmakingQueue() {
 
             // Log the match
             console.log(`%cMatched players: ${player1.id} vs ${player2.id}`, 'color: green; font-weight: bold;'); // Highlight the match in green in console
-
             startMatch(player1, player2); // Start match with these two players
 
             // Mark both players as matched
@@ -70,13 +68,6 @@ export function useMatchmakingQueue() {
                 console.log(`Player ${player1.id} and ${player2.id} removed from the queue after being matched.`);
                 return updatedQueue;
             });
-
-            // Clear the search timer since players were matched
-            if (searchTimer) {
-                clearTimeout(searchTimer);
-                setSearchTimer(null);
-            }
-
         } else {
             console.log('No match found, expanding search range...');
             setTimeout(() => expandSearchRange(queue), MATCH_TIMEOUT);
@@ -103,7 +94,7 @@ export function useMatchmakingQueue() {
                 const timer = setTimeout(() => {
                     console.log('Expanding search range due to timeout.');
                     expandSearchRange(matchmakingQueue);
-                }, EXPAND_TIME_LIMIT);
+                }, EXPAND_TIME_LIMIT * 1000);
                 setSearchTimer(timer); // Set the timer
             }
         }
