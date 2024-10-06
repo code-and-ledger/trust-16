@@ -107,5 +107,5 @@ export function useMatchmakingQueue() {
 export interface Player {
     id: string;
     latency: number;
-    matched?: boolean; // New flag to indicate if the player has been matched
+    matched?: boolean; // indicates if the player has been matched
 }
