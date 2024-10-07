@@ -1,11 +1,11 @@
 [package]
 name = "Trust16"
-version = "1.0.0"
-authors = []
+version = "0.0.1"
+authors = ["lay (Aladeen): aladeen@codeandledger.com"]
 
 [addresses]
-trust_16 = "0x2cdf1f17ef5a45e959140abc428ba14aa6d19a1923b2f440a699c04f1930da29"
-
+trust_16 = "0x7cc93308a827ac3cf3595718295a7e18d8e880e63728b2f52822f4a76ad1233d"
+session_manager = "0x9a01c4338e07af8b540990de6d4fb7546a2034166e56befd37da35a8c5fcc655"
 [dev-addresses]
 
 [dependencies.AptosFramework]

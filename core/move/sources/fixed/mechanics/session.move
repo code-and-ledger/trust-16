@@ -12,7 +12,7 @@
         - add events
 */
 
-module trust_16::match {
+module trust_16::session {
     use aptos_framework::dispatchable_fungible_asset;
     use aptos_framework::fungible_asset::{Self, Metadata, FungibleAsset};
     use aptos_framework::object::{Self, Object};
@@ -113,9 +113,9 @@ module trust_16::match {
     // --------------------
 
     /// Initializes the global info resource
-    fun init_module(signer_ref: &signer) {
+    fun init_module(deployer: &signer) {
         move_to(
-            signer_ref,
+            deployer,
             GlobalInfo {
                 active_sessions: smart_vector::new<address>()
             }
@@ -149,16 +149,15 @@ module trust_16::match {
 
     /// Function to trigger when all players have joined the game
     /// This will trigger the game to start
-    public(friend) fun start_session(session_id: address) acquires SessionInfo {
-        // ensure all players have joined
-        let session_info = borrow_global<SessionInfo>(session_id);
-        let players = session_info.players;
-        assert_players_eligibility(players);
+    public(friend) fun start_session(session_id: address) acquires GlobalInfo, SessionInfo {
         // trigger the game to start
         let session_info = borrow_global_mut<SessionInfo>(session_id);
         let time_now_seconds = timestamp::now_seconds();
         assert!(session_info.created_at <= time_now_seconds, ETIME_INVALID);
         session_info.started_at = option::some(time_now_seconds);
+        // add the session to the active sessions list
+        let global_info = borrow_global_mut<GlobalInfo>(@trust_16);
+        smart_vector::push_back(&mut global_info.active_sessions, session_id);
     }
 
     /// Function to end the session
@@ -185,20 +184,23 @@ module trust_16::match {
         object::generate_signer_for_extending(&session_info.extend_ref)
     }
 
-    // ----------------
-    // Public Functions
-    // ----------------
+    // --------------
+    // View Functions
+    // --------------
 
+    #[view]
     /// Returns if the session exists
     public fun session_exists(session_id: address): bool {
         exists<SessionInfo>(session_id)
     }
 
+    #[view]
     /// Returns true if a player is in a session
     public fun has_active_session(player_addr: address): bool {
         exists<Badge>(player_addr)
     }
 
+    #[view]
     /// Returns the active session id of a player
     public fun active_session_id(player_addr: address): Option<address> acquires Badge {
         if (has_active_session(player_addr)) {
@@ -209,6 +211,7 @@ module trust_16::match {
         }
     }
 
+    #[view]
     /// Returns true if the player is in the session
     public fun player_is_in_session(player_addr: address, session_id: address): bool acquires Badge {
         if (has_active_session(player_addr)) {
@@ -219,10 +222,18 @@ module trust_16::match {
         }
     }
 
+    #[view]
     /// Returns whether the session is active or not
     public fun is_active(session_id: address): bool acquires GlobalInfo {
         let global_info = borrow_global<GlobalInfo>(@trust_16);
         smart_vector::contains(&global_info.active_sessions, &session_id)
+    }
+
+    #[view]
+    /// Returns the addresses of the players in the session
+    public fun players(session_id: address): vector<address> acquires SessionInfo {
+        let session_info = borrow_global<SessionInfo>(session_id);
+        session_info.players
     }
 
     // ----------------
@@ -237,6 +248,24 @@ module trust_16::match {
     /// Internal function to remove badges from players, allowing them to leave the session
     public(friend) fun remove_badges_from_players(player_addr: address) acquires Badge {
         let Badge { session_id: _ } = move_from<Badge>(player_addr);
+    }
+
+    // ----------
+    // Unit tests
+    // ----------
+
+    #[test_only]
+    friend trust_16::test_session;
+
+    #[test_only]
+    friend trust_16::test_utils;
+
+    #[test_only]
+    friend trust_16::test_mechanics;
+
+    #[test_only]
+    public fun init_for_test(deployer: &signer) {
+        init_module(deployer);
     }
             
 }
