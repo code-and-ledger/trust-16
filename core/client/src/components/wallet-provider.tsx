@@ -1,71 +1,72 @@
-import React from 'react';
-import { AptosWalletAdapterProvider, useWallet, Wallet, WalletName, WalletReadyState } from '@aptos-labs/wallet-adapter-react';
-import { cn } from '@/lib/utils';
+import { useWallet, Wallet, WalletName, WalletReadyState } from '@aptos-labs/wallet-adapter-react';
+import { useState } from 'react';
+import LandingPage from '@/components/landing-page'; // Import the LandingPage component
 
-const WalletProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  return (
-    <AptosWalletAdapterProvider autoConnect={true}>
-      {children}
-    </AptosWalletAdapterProvider>
-  );
-};
-
-export default WalletProvider;
-
-export const WalletButtons = () => {
+export const WalletButton = () => {
   const { wallets, connected, disconnect } = useWallet();
+  const [started, setStarted] = useState(false); // State to track if the "Start" button was clicked
 
   if (!wallets || wallets.length === 0) {
     return <p>No wallets found</p>;
   }
 
+  const firstWallet = wallets[2]; // Select only aptos connect
+
+  if (started) {
+    // Render the LandingPage component once the "Start" button is clicked
+    return <LandingPage />;
+  }
+
   return (
     <div>
-      {wallets.map((wallet, idx) => (
-        <WalletView key={idx} wallet={wallet} />
-      ))}
+      {connected ? (
+        <>
+          <p>Connected</p>
+          <button
+            className="ml-4 p-2 text-white bg-blue-500 hover:bg-blue-700 rounded"
+            disabled={!connected} // Disable the button if disconnected
+            onClick={() => setStarted(true)} // When clicked, set "started" to true
+          >
+            Start
+          </button>
+          <button
+            className="p-2 text-white bg-red-500 hover:bg-red-700 rounded"
+            onClick={disconnect}
+          >
+            Disconnect
+          </button>
+        </>
+      ) : (
+        <WalletView wallet={firstWallet} />
+      )}
     </div>
   );
 };
 
-// Type guard to check if the wallet is of type `Wallet`
-const isWallet = (wallet: any): wallet is Wallet => {
-  return (wallet as Wallet).readyState !== undefined;
-};
-
+// Ensure WalletView is properly updated as before
 const WalletView = ({ wallet }: { wallet: Wallet | any }) => {
   const { connect } = useWallet();
-  
-  // Only proceed if the wallet is of type `Wallet`
-  if (!isWallet(wallet)) {
-    return <p>Invalid wallet</p>;
-  }
-
-  const isWalletReady =
-    wallet.readyState === WalletReadyState.Installed ||
-    wallet.readyState === WalletReadyState.Loadable;
 
   const onWalletConnectRequest = async (walletName: WalletName) => {
     try {
-      console.log(`Attempting to connect to ${walletName}`);
       await connect(walletName);
-      console.log(`Connected to ${walletName}`);
     } catch (error) {
       console.warn(error);
-      window.alert("Failed to connect wallet");
+      window.alert('Failed to connect wallet');
     }
   };
 
+  const isWalletReady = wallet.readyState === WalletReadyState.Installed || wallet.readyState === WalletReadyState.Loadable;
+
   return (
     <button
-      className={cn(
-        "p-2 text-white rounded", // basic button styles
-        isWalletReady ? "hover:bg-blue-700 bg-blue-500" : "opacity-50 cursor-not-allowed"
-      )}
+      className={`p-2 text-white rounded ${
+        isWalletReady ? 'hover:bg-blue-700 bg-blue-500' : 'opacity-50 cursor-not-allowed'
+      }`}
       disabled={!isWalletReady}
       onClick={() => onWalletConnectRequest(wallet.name)}
     >
-      {isWalletReady ? `Connect ${wallet.name}` : `${wallet.name} Not Ready`}
+      {isWalletReady ? `Start` : `${wallet.name} Not Ready`}
     </button>
   );
 };
