@@ -87,12 +87,18 @@ module trust_16::rewards_pool {
         dispatchable_fungible_asset::withdraw(withdrawer_signer_ref, info.store, amount)
     }
 
+    // --------------
+    // View Functions
+    // --------------
+
+    #[view]
     /// Returns the object of the rewards pool store
     public fun pool_store_object(): Object<FungibleStore> acquires Info {
         let info = borrow_global<Info>(@trust_16);
         info.store
     }
 
+    #[view]
     /// Returns the address of the rewards pool store
     public fun pool_address(): address acquires Info {
         let info = borrow_global<Info>(@trust_16);

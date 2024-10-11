@@ -16,24 +16,24 @@ module trust_16::test_short_game {
 
     const PEPPER: vector<u8> = b"trust_test";
 
-    #[test(aptos_framework = @0x1, trust_16 = @trust_16, alice = @0x111, bob = @0x222, charlie = @0x333)]
-    public fun e2e(aptos_framework: &signer, trust_16: &signer, alice: &signer, bob: &signer, charlie: &signer) {
-        test_utils::setup_test(aptos_framework, trust_16, alice, bob, charlie);
+    #[test(aptos_framework = @0x1, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
+    public fun e2e(aptos_framework: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
+        test_utils::setup_test(aptos_framework, trust_16, session_manager, alice, bob, charlie);
         let session_id = short_game::prepare_game(
             vector[signer::address_of(alice), signer::address_of(bob)]
         );
         mechanics::join_game(alice, session_id);
         mechanics::join_game(bob, session_id);
-        mechanics::start_game(session_id);
+        // game automatically starts when all players joined
         
         // first round
-        mechanics::submit_first_decision(
+        mechanics::submit_decision(
             alice,
             session_id,
             0,
             utils::hashed_cooperate(PEPPER)
         );
-        mechanics::submit_last_decision(
+        mechanics::submit_decision(
             bob,
             session_id,
             0,
@@ -46,13 +46,13 @@ module trust_16::test_short_game {
         timestamp::fast_forward_seconds(60);
 
         // second round
-        mechanics::submit_first_decision(
+        mechanics::submit_decision(
             alice,
             session_id,
             1,
             utils::hashed_cooperate(PEPPER)
         );
-        mechanics::submit_last_decision(
+        mechanics::submit_decision(
             bob,
             session_id,
             1,
@@ -65,13 +65,13 @@ module trust_16::test_short_game {
         timestamp::fast_forward_seconds(60);
         
         // third round
-        mechanics::submit_first_decision(
+        mechanics::submit_decision(
             alice,
             session_id,
             2,
             utils::hashed_cooperate(PEPPER)
         );
-        mechanics::submit_last_decision(
+        mechanics::submit_decision(
             bob,
             session_id,
             2,
@@ -84,13 +84,13 @@ module trust_16::test_short_game {
         timestamp::fast_forward_seconds(60);
 
         // fourth round
-        mechanics::submit_first_decision(
+        mechanics::submit_decision(
             alice,
             session_id,
             3,
             utils::hashed_cooperate(PEPPER)
         );
-        mechanics::submit_last_decision(
+        mechanics::submit_decision(
             bob,
             session_id,
             3,
@@ -103,13 +103,13 @@ module trust_16::test_short_game {
         timestamp::fast_forward_seconds(60);
 
         // fifth round
-        mechanics::submit_first_decision(
+        mechanics::submit_decision(
             alice,
             session_id,
             4,
             utils::hashed_cooperate(PEPPER)
         );
-        mechanics::submit_last_decision(
+        mechanics::submit_decision(
             bob,
             session_id,
             4,
