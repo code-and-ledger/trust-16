@@ -7,12 +7,17 @@ import { Button } from "@/components/ui/button"
 import PowerButton from '@/components/power-button';
 import Main from '@/components/main';
 import LandingPage from "@/components/landing-page";
+import {WalletButtons} from "@/components/wallet-provider";
+import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
+import { PetraWallet } from "petra-plugin-wallet-adapter";
+
 export default function Home() {
   const [click, setClick] = useState(false);
   const handleClick = () => setClick(!click);
-
   return (
-    <div className="bg-background w-screen h-screen overflow-hidden relative">
+    <AptosWalletAdapterProvider autoConnect={true}>
+      <WalletButtons />
+      <div className="bg-background w-screen h-screen overflow-hidden relative">
       <div className={`absolute top-0 bottom-0 right-1/2 bg-black transition-all duration-500 ease-in-out ${click ? 'w-1/2 h-full' : 'w-0 h-0'}`} />
       <div className="p-8">
         <PowerButton />
@@ -36,5 +41,7 @@ export default function Home() {
       </div>
       {click && <LandingPage click={click} />}
     </div>
+    </AptosWalletAdapterProvider>
+
   );
 };
