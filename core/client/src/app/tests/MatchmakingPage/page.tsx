@@ -1,14 +1,7 @@
 "use client"; // Client component
 
-import { useMatchmakingQueue } from '@/hooks/matchmaking/useMatchMakingQueue';
+import { Player, useMatchmakingQueue } from '@/hooks/matchmaking/useMatchMakingQueue';
 import React, { useEffect } from 'react';
-
-// Define the Player interface
-interface Player {
-    id: string;
-    latency: number;
-    matched?: boolean;
-}
 
 const MatchmakingPage = () => {
     const { joinQueue, matchmakingQueue } = useMatchmakingQueue();
