@@ -14,6 +14,8 @@ export const MODULE_NAMES = {
     REWARDS_POOL: 'rewards_pool',
     SESSION: 'session',
     SHORT_GAME: 'short_game',
+    // aptos framework
+    RANDOMNESS: 'randomness',
 }
 
 const FUNCTION_NAMES = {
@@ -25,6 +27,7 @@ const FUNCTION_NAMES = {
     // utils
     HASHED_COOPERATE: 'hashed_cooperate',
     HASHED_COMPETE: 'hashed_compete',
+    GENERATE_U256_IN_RANGE: 'generate_u256_in_range',
     // trust_coin
     BURN: 'burn',
     ADMIN_ADD_TO_DENYLIST: 'admin_add_to_denylist',
@@ -87,6 +90,7 @@ export const ENDPOINTS = {
     [MODULE_NAMES.UTILS]: {
         HASHED_COOPERATE: `${SELECTED_TRUST_16_ADDRESS}::${FUNCTION_NAMES.HASHED_COOPERATE}`,
         HASHED_COMPETE: `${SELECTED_TRUST_16_ADDRESS}::${FUNCTION_NAMES.HASHED_COMPETE}`,
+        GENERATE_U256_IN_RANGE: `${APTOS_FRAMEWORK}::${FUNCTION_NAMES.GENERATE_U256_IN_RANGE}`,
     },
     [MODULE_NAMES.TRUST_COIN]: {
         BURN: `${SELECTED_TRUST_16_ADDRESS}::${FUNCTION_NAMES.BURN}`,
@@ -137,4 +141,5 @@ export const ENDPOINTS = {
         ROUNDS_COUNT: `${SELECTED_TRUST_16_ADDRESS}::${FUNCTION_NAMES.SHORT_GAME_ROUNDS_COUNT}`,
         ROUND_DURATION: `${SELECTED_TRUST_16_ADDRESS}::${FUNCTION_NAMES.SHORT_GAME_ROUND_DURATION}`,
     },
+
 }

@@ -18,3 +18,4 @@ const useMatchmakingQueue = () => {
 };
 
 export default useMatchmakingQueue;
+

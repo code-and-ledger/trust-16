@@ -8,6 +8,7 @@ module trust_16::test_utils {
     use aptos_framework::account;
     use aptos_framework::aptos_coin::{Self, AptosCoin as APT};
     use aptos_framework::coin;
+    use aptos_framework::randomness;
     // use aptos_framework::dispatchable_fungible_asset;
     use aptos_framework::fungible_asset::{Self, Metadata};
     use aptos_framework::genesis;
@@ -52,6 +53,7 @@ module trust_16::test_utils {
         rewards_pool::init(trust_16);
         session::init_for_test(trust_16);
         timestamp::set_time_has_started_for_testing(aptos_framework);
+        randomness::initialize_for_testing(aptos_framework);
 
         // mint TRUST for accounts
         trust_coin::mint(trust_16, signer::address_of(alice), AMOUNT);

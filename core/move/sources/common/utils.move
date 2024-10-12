@@ -1,6 +1,10 @@
 module trust_16::utils {
-    use std::vector;
+    use aptos_framework::randomness;
     use aptos_std::aptos_hash;
+    use std::vector;
+
+    /// The number is not in the range
+    const ENOT_IN_RANGE: u64 = 1;
 
     /// Checks if vectors `x` and `y` contain the same elements and have the same length.
     public fun compare_vectors<Element: copy + drop>(x: &vector<Element>, y: &vector<Element>): bool {
@@ -40,5 +44,16 @@ module trust_16::utils {
         // false for compete
         vector::append(&mut pepper, vector[0]);
         aptos_hash::blake2b_256(pepper)
+    }
+
+    // TODO: remove before production
+    #[deprecated]
+    #[view]
+    /// Generates a random u256 in the range [min, max]
+    /// Used for randomly selecting players for matchmaking
+    #[lint::allow_unsafe_randomness]
+    public fun generate_u46_in_range(min: u64, max: u64): u64 {
+        assert!(min <= max, ENOT_IN_RANGE);
+        randomness::u64_range(min, max)
     }
 }
