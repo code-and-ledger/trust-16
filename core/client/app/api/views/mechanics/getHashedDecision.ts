@@ -1,5 +1,5 @@
 import { Aptos, InputViewFunctionData, MoveValue } from '@aptos-labs/ts-sdk';
-import { ENDPOINTS, MODULE_NAMES } from '@/utils/constants';
+import { ENDPOINTS, MODULE_NAMES } from '../../../utils/constants';
 
 /**
  * Retrieves the hashed decision for a given session, round, and player.

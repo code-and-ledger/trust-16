@@ -1,5 +1,5 @@
-import { ENDPOINTS, MODULE_NAMES } from '@/utils/constants';
-import { hashWithPepper, storePepper } from '@/utils/encryption';
+import { ENDPOINTS, MODULE_NAMES } from '../../utils/constants';
+import { hashWithPepper, storePepper } from '../../utils/encryption';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 
 /**

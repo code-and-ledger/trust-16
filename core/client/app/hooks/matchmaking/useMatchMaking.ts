@@ -1,5 +1,5 @@
-import { addPlayerToQueue, findMatch } from '@/services/matchMakingService';
-import { Match, Player } from '@/types';
+import { addPlayerToQueue, findMatch } from '../../services/matchMakingService';
+import { Match, Player } from '../../types';
 import { useState, useEffect } from 'react';
 
 const useMatchmaking = () => {

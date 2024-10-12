@@ -1,4 +1,4 @@
-import { ENDPOINTS, MODULE_NAMES } from '@/utils/constants';
+import { ENDPOINTS, MODULE_NAMES } from '../../utils/constants';
 import { Account, CreateEd25519AccountFromPrivateKeyArgs, Ed25519PrivateKey } from '@aptos-labs/ts-sdk';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import dotenv from 'dotenv';
