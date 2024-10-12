@@ -13,7 +13,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const handleKeyPress = () => {
       setClick(true);
-      router.push('/pages/connect'); // Navigate to the connect page
+      router.push('/connect'); // Navigate to the connect page
     };
 
     // Add event listener for key press

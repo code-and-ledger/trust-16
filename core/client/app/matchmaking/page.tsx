@@ -7,7 +7,7 @@ export default function MatchMakingPage() {
   const router = useRouter();
 
   const handleAccept = () => {
-    router.push('/pages/short-game'); // Navigate to short game mode
+    router.push('/short-game'); // Navigate to short game mode
   };
 
   return (

@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion';
-import GameModeSelector from '../../components/game-mode-selector';
-import SplashScreen from '../../components/splash-screen';
-import PlayerDashboard from '../../components/ui/answer-history';
-import { Card, CardContent } from '../../components/ui/card';
-import { EvervaultCard } from '../../components/ui/evervault-card';
+import SplashScreen from '../components/splash-screen';
+import PlayerDashboard from '../components/ui/answer-history';
+import { Card, CardContent } from '../components/ui/card';
+import { EvervaultCard } from '../components/ui/evervault-card';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { useRouter } from 'next/navigation'; // Import from 'next/navigation'
+import GameModeSelector from '../components/game-mode-selector';
 
 
 const LandingPage: React.FC = () => {

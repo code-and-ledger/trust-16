@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
-import { WalletButton } from '../../components/wallet-button';
+import { WalletButton } from '../components/wallet-button';
 import Image from 'next/image';
 
 const ConnectPage: React.FC = () => {

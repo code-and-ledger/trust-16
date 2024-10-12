@@ -1,7 +1,6 @@
 import { useWallet, Wallet, WalletName, WalletReadyState } from '@aptos-labs/wallet-adapter-react';
-import { useState, useEffect } from 'react';
-import Link from 'next/link'; // Import Next.js Link component
-import { useRouter } from 'next/navigation'; // Import router for programmatic navigation
+import Link from 'next/link'; 
+import { useRouter } from 'next/navigation';
 
 export const WalletButton = () => {
   const { wallets, connected, disconnect } = useWallet();
@@ -23,7 +22,7 @@ export const WalletButton = () => {
       {connected ? (
         <>
           <p>Connected</p>
-          <Link href="/pages/landing">
+          <Link href="/landing">
             <button className="bg-blue-500 text-white py-2 px-4 rounded-lg">Start</button>
           </Link>
           <button

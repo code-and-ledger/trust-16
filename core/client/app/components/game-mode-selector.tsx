@@ -20,20 +20,20 @@ export default function GameModeSelector() {
     if (selectedMode) {
       // Go to matchmaking first
       setIsMatchmaking(true);
-      router.push('/pages/matchmaking')
+      router.push('/matchmaking')
 
       // Simulate matchmaking process (you can replace this with real logic)
       const matchmakingTimer = setTimeout(() => {
         setIsMatchmaking(false)
         // After matchmaking, navigate to the selected game mode
         if (selectedMode === "Short") {
-          router.push('/pages/short-game')
+          router.push('/short-game')
         } else if (selectedMode === "Campaign") {
-          router.push('/pages/campaign-game')
+          router.push('/campaign-game')
         } else if (selectedMode === "5-minutes") {
-          router.push('/pages/five-minutes-game')
+          router.push('/five-minutes-game')
         } else if (selectedMode === "Tournament") {
-          router.push('/pages/tournament-game')
+          router.push('/tournament-game')
         }
       }, 3000) // Simulate 3 seconds of matchmaking
 
