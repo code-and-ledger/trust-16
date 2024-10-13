@@ -117,8 +117,8 @@ module trust_16::mechanics {
         };
         let round_duration = round_duration(session_id, round_index);
         let current_time = timestamp::now_seconds();
-        // time check
-        assert!(current_time >= round_time && current_time <= round_time + round_duration, EROUND_INVALID);
+        // TODO: time check
+        // assert!(current_time >= round_time && current_time <= round_time + round_duration, EROUND_INVALID);
     }
 
     // ----------------

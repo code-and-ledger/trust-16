@@ -6,8 +6,10 @@
 
 module trust_16::router {
 
+    use aptos_framework::event;
     use std::vector;
     use std::signer;
+    use std::string::{Self, String};
     use trust_16::mechanics;
     use trust_16::short_game;
     use trust_16::long_game;
@@ -23,6 +25,17 @@ module trust_16::router {
     /// Not authorized
     const ENOT_AUTHORIZED: u64 = 1;
 
+    // ------
+    // Events
+    // ------
+
+    #[event]
+    struct SessionCreated has drop, store {
+        session_id: address,
+        game_type: String,
+        players: vector<address>
+    }
+
     // ---------------
     // Entry Functions
     // ---------------
@@ -37,7 +50,8 @@ module trust_16::router {
     ) {
         // assert that the caller is a session manager
         assert!(signer::address_of(signer_ref) == @session_manager, ENOT_AUTHORIZED);
-        short_game::prepare_game(players);
+        let session_id = short_game::prepare_game(players);
+        event::emit(SessionCreated { session_id, game_type: string::utf8(b"short_game"), players });
     }
 
     // common
