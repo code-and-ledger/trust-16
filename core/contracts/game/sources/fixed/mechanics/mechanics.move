@@ -34,7 +34,7 @@ module trust_16::mechanics {
     use std::vector;
     use trust_16::session;
     use trust_16::rewards_pool;
-    use trust_16::trust_coin;
+    use trust_coin::trust_coin;
     use trust_16::utils;
 
     friend trust_16::long_game;

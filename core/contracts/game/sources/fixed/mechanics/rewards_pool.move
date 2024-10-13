@@ -14,7 +14,7 @@ module trust_16::rewards_pool {
     use aptos_framework::primary_fungible_store;
     use std::object::{Self, Object};
     use std::signer;
-    use trust_16::trust_coin;
+    use trust_coin::trust_coin;
 
     friend trust_16::admin;
     friend trust_16::mechanics;

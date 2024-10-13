@@ -11,7 +11,7 @@ module trust_16::admin {
     use std::signer;
     use trust_16::rewards_pool;
     use trust_16::session;
-    use trust_16::trust_coin;
+    use trust_coin::trust_coin;
 
     // ---------
     // Resources
