@@ -1,13 +1,28 @@
 "use client";
 import { Users, Search, Loader, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import Image from 'next/image';
+import InviteModal from '../../components/invite-modal';
 
 export default function MatchMakingPage() {
   const router = useRouter();
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const handleAccept = () => {
     router.push('/short-game'); // Navigate to short game mode
+  };
+
+  const handleInviteFriend = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    router.push('/landing'); // Navigate back to the landing page
   };
 
   return (
@@ -55,16 +70,18 @@ export default function MatchMakingPage() {
           <button onClick={handleAccept} className="border border-white px-4 py-2 rounded flex items-center text-sm md:text-base">
             Accept
           </button>
-          <button className="border border-white px-4 py-2 rounded flex items-center text-sm md:text-base">
+          <button onClick={handleInviteFriend} className="border border-white px-4 py-2 rounded flex items-center text-sm md:text-base">
             <Users className="w-5 h-5 mr-2 md:w-6 md:h-6" />
             Invite friend
           </button>
-          <button className="border border-white px-4 py-2 rounded flex items-center text-sm md:text-base">
+          <button onClick={handleCancel} className="border border-white px-4 py-2 rounded flex items-center text-sm md:text-base">
             Cancel
             <X className="w-5 h-5 ml-2 md:w-6 md:h-6" />
           </button>
         </div>
       </div>
+
+      <InviteModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 }

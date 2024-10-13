@@ -57,8 +57,8 @@ const LandingPage: React.FC = () => {
                         <div className="max-w-sm mx-auto relative h-[20rem]">
                             <EvervaultCard
                                 imageUrl="/flinch.jpg"
-                                level={5}
-                                money={10000}
+                                level={1}
+                                money={100}
                             />
                         </div>
                     </div>
