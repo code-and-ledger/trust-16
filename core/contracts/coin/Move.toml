@@ -1,0 +1,16 @@
+[package]
+name = "TrustCoin"
+version = "0.0.1"
+authors = ["lay (Aladeen): aladeen@codeandledger.com"]
+
+[addresses]
+trust_coin = "0xf59af1cc8dd31e2aa357f06c0f170975f3551818cbcefb279eadc3b151f03b17"
+dev = "0x2cdf1f17ef5a45e959140abc428ba14aa6d19a1923b2f440a699c04f1930da29"
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dev-dependencies]
