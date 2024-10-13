@@ -1,5 +1,5 @@
 aptos move upgrade-object-package \
- --object-address 0x5a86219116fffdaab7e1096c83d33f39d4fbc11ac25b197bf51ae868c9f27349 \
- --named-addresses trust_16=0x5a86219116fffdaab7e1096c83d33f39d4fbc11ac25b197bf51ae868c9f27349 \
+ --object-address 0xde34c33a63e37a84c44bb038893b5ed605c715736cd1da113931a47874455139 \
+ --named-addresses trust_16=0xde34c33a63e37a84c44bb038893b5ed605c715736cd1da113931a47874455139 \
  --included-artifacts none \
  --assume-yes
