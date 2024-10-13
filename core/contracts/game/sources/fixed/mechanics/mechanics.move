@@ -560,7 +560,17 @@ module trust_16::mechanics {
         let round = borrow_round(session_id, round_index);
         let submitters = smart_table::keys(&round.decisions);
         let participants = session::players(session_id);
-        utils::compare_vectors(&submitters, &participants)
+        let all_submitted = false;
+        for (i in 0..vector::length(&participants)) {
+            let player = *vector::borrow(&participants, i);
+            if (!smart_table::contains(&round.decisions, player)) {
+                all_submitted = false
+            } else {
+                all_submitted = true
+            }
+        };
+
+        all_submitted
     }
 
     #[view]

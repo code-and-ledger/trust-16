@@ -5,7 +5,15 @@ module trust_16::utils {
 
     /// The number is not in the range
     const ENOT_IN_RANGE: u64 = 1;
+    /// TODO: not used
+    /// Cooperate
+    const COOPERATE: vector<u8> = b"cooperate";
+    /// TODO: not used
+    /// Compete
+    const COMPETE: vector<u8> = b"compete";
 
+    /// TODO: delete before deployment - figured out an alternative
+    #[deprecated]
     /// Checks if vectors `x` and `y` contain the same elements and have the same length.
     public fun compare_vectors<Element: copy + drop>(x: &vector<Element>, y: &vector<Element>): bool {
         // Check if lengths are equal
