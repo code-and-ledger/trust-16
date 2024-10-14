@@ -1,23 +1,25 @@
-import { ENDPOINTS, MODULE_NAMES } from '../../utils/constants';
-import { deletePepper, getPepper } from '../../utils/encryption';
-import { Account, CreateEd25519AccountFromPrivateKeyArgs, Ed25519PrivateKey } from '@aptos-labs/ts-sdk';
-import { useWallet } from '@aptos-labs/wallet-adapter-react';
+import { createSurfClient } from '@thalalabs/surf';
+import { Aptos, AptosConfig, Account, Ed25519PrivateKey } from "@aptos-labs/ts-sdk";
 import dotenv from 'dotenv';
+import { HexString, Network } from 'aptos';
+import { ABI } from '@/utils/abi';
 
 // Load environment variables
 dotenv.config();
 
-// Load the private key from the environment variable
-const adminPrivateKey = new Ed25519PrivateKey(process.env.SESSION_MANAGER_PK || '');
-// Check if the private key is defined
-if (!adminPrivateKey) {
-    throw new Error('Admin wallet private key is not defined in the .env file');
-  }
-let args: CreateEd25519AccountFromPrivateKeyArgs = {
-    privateKey: adminPrivateKey,
+// Create an Aptos client for the TESTNET network
+const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
+
+// Create a SurfClient with the Aptos client and ABI
+const surfClient = createSurfClient(aptos).useABI(ABI);
+
+const privateKeyHex = process.env.NEXT_PUBLIC_SESSION_MANAGER_PK || '';
+if (!privateKeyHex) {
+  throw new Error('Private key not found in environment variables');
 }
-// Initialize the Aptos account using the private key
-let account = Account.fromPrivateKey(args);
+const privateKeyBytes = HexString.ensure(privateKeyHex).toUint8Array();
+const privateKey = new Ed25519PrivateKey(privateKeyBytes);
+const account = Account.fromPrivateKey({ privateKey });
 
 /**
  * Hook to submit pepper and finish the round using the admin wallet.
@@ -30,42 +32,22 @@ let account = Account.fromPrivateKey(args);
 const useAdminSubmitPepperAndFinishRound = (
   sessionID: string,
   roundIndex: number,
-  hash: string
+  // hash: string
 ) => {
-  const { signAndSubmitTransaction, connected } = useWallet();
-
-  // Async function to handle the operation
-  const payload = async (): Promise<{ success: boolean; message: string }> => {
-    if (!connected) {
-      return { success: false, message: 'Wallet is not connected' };
-    }
-
+  const hash = "0x706570706572";
+  const payload = async () => {
     try {
-      // Retrieve the pepper using the hash
-      const pepper = await getPepper(hash);
-
-      if (!pepper) {
-        return { success: false, message: 'Pepper not found for the given hash' };
-      }
-
-      // Submit the transaction with the retrieved pepper
-      const response = await signAndSubmitTransaction({
-        sender: account.accountAddress,
-        data: {
-          function: ENDPOINTS[MODULE_NAMES.ROUTER].SUBMIT_PEPPER_AND_FINISH_ROUND as `${string}::${string}::${string}`,
-          typeArguments: [],
-          functionArguments: [sessionID, roundIndex, pepper],
-        },
+      // Execute the PREPARE_SHORT_GAME entry function using Surf
+      const response = await surfClient.entry.admin_submit_pepper_and_finish_round({
+        functionArguments: [sessionID as any, roundIndex, hash],
+        typeArguments: [],
+        account: account,
       });
-
-      // Delete the pepper after the transaction is submitted
-      await deletePepper(hash);
-
-      console.log('Transaction response:', response);
-      return { success: true, message: 'Transaction submitted successfully' };
+      
+      // Return the response from the entry function
+      return response;
     } catch (error) {
-      console.error('Error submitting transaction:', error);
-      return { success: false, message: `Error submitting transaction: ${error instanceof Error ? error.message : error}` };
+      throw error;
     }
   };
 

@@ -1,12 +1,13 @@
-"use client"
-import { useState, useEffect } from 'react'
-import { Settings, Diamond, Info } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import Main from "../../components/main"
-import { EvervaultCard } from "../../components/ui/evervault-card"
-
+"use client";
+import { useState, useEffect } from "react";
+import { Settings, Diamond, Info } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Main from "../../components/main";
+import { EvervaultCard } from "../../components/ui/evervault-card";
+import useSubmitDecision from "@/hooks/router/useSubmitDecision";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 // GameInfoDialog component
 const GameInfoDialog = () => (
@@ -71,35 +72,32 @@ const GameInfoDialog = () => (
       </Tabs>
     </DialogContent>
   </Dialog>
-)
+);
 
 // PlayerCard component
 const PlayerCard = ({ username, balance, isOpponent = false }) => (
   <div className={`text-center`}>
     <div className="max-w-sm mx-auto relative h-[20rem]">
       {/* Conditionally apply the transform class to invert the image */}
-      <EvervaultCard 
-        imageUrl="/flinch.png" 
-        level={5} 
-        money={balance} 
-        isOpponent={isOpponent}
-      />
+      <EvervaultCard imageUrl="/flinch.png" level={5} money={balance} isOpponent={isOpponent} />
     </div>
     <div className="text-xl mt-4">{username}</div>
     <div className="tracking-wider text-sm">
-      {balance !== undefined ? `${balance} TRUST` : '◇◇◇◇◇◇◇◇◇◇'}
+      {balance !== undefined ? `${balance} TRUST` : "◇◇◇◇◇◇◇◇◇◇"}
     </div>
   </div>
-)
+);
 
 // ChoiceButtons component
-const ChoiceButtons = ({ playerChoice, setPlayerChoice, disabled }) => (
+const ChoiceButtons = ({ playerChoice, handlePlayerChoice, disabled }) => (
   <div className="flex justify-center space-x-8">
     <Button
       variant="outline"
       size="lg"
-      className={`text-2xl text-primary font-bold transition-all duration-300 ${playerChoice === 'green' ? 'bg-green-500 text-white scale-110' : 'hover:bg-green-200'}`}
-      onClick={() => setPlayerChoice('green')}
+      className={`text-2xl text-primary font-bold transition-all duration-300 ${
+        playerChoice === "green" ? "bg-green-500 text-white scale-110" : "hover:bg-green-200"
+      }`}
+      onClick={() => handlePlayerChoice("green")}
       disabled={disabled}
     >
       Cooperate
@@ -107,14 +105,16 @@ const ChoiceButtons = ({ playerChoice, setPlayerChoice, disabled }) => (
     <Button
       variant="outline"
       size="lg"
-      className={` text-primary text-2xl font-bold transition-all duration-300 ${playerChoice === 'red' ? 'bg-red-500 text-white scale-110' : 'hover:bg-red-200'}`}
-      onClick={() => setPlayerChoice('red')}
+      className={`text-primary text-2xl font-bold transition-all duration-300 ${
+        playerChoice === "red" ? "bg-red-500 text-white scale-110" : "hover:bg-red-200"
+      }`}
+      onClick={() => handlePlayerChoice("red")}
       disabled={disabled}
     >
       Compete
     </Button>
   </div>
-)
+);
 
 // RoundResult component
 const RoundResult = ({ playerChoice, opponentChoice }) => (
@@ -122,52 +122,66 @@ const RoundResult = ({ playerChoice, opponentChoice }) => (
     <div className="flex rounded-full overflow-hidden">
       <div className="bg-white border-2 border-black p-4">
         <div className="text-3xl font-bold flex items-center">
-          <span className="text-black">
-            {playerChoice === 'green' ? 'G' : (playerChoice === 'red' ? 'R' : '-')}
-          </span>
+          <span className="text-black">{playerChoice === "green" ? "G" : playerChoice === "red" ? "R" : "-"}</span>
         </div>
       </div>
       <div className="bg-black border-2 border-white p-4">
         <div className="text-3xl font-bold flex items-center">
-          <span className="text-white">
-            {opponentChoice === 'green' ? 'G' : (opponentChoice === 'red' ? 'R' : '-')}
-          </span>
+          <span className="text-white">{opponentChoice === "green" ? "G" : opponentChoice === "red" ? "R" : "-"}</span>
         </div>
       </div>
     </div>
   </div>
-)
+);
 
 export default function ShortGameMode() {
-  const [round, setRound] = useState(1)
-  const [playerChoice, setPlayerChoice] = useState<'green' | 'red' | null>(null)
-  const [opponentChoice, setOpponentChoice] = useState<'green' | 'red' | null>(null)
-  const [gamePool, setGamePool] = useState(100)
-  const [playerBalance, setPlayerBalance] = useState(50)
+  const [round, setRound] = useState(1);
+  // TODO: decsion should be a boolean
+  const [playerChoice, setPlayerChoice] = useState<"green" | "red" | null>(null);
+  const [opponentChoice, setOpponentChoice] = useState<"green" | "red" | null>(null);
+  const [gamePool, setGamePool] = useState(100);
+  const [playerBalance, setPlayerBalance] = useState(50);
+
+  const { account } = useWallet();
+  const sessionID = "abc"; // Replace with actual session ID
+
+  // Initialize the submitDecision function from the hook
+  if (account) {
+    const res = useSubmitDecision(account.address, sessionID, round, true);
+    console.log("res", res);
+  }
 
   useEffect(() => {
     if (playerChoice) {
       setTimeout(() => {
-        setOpponentChoice(Math.random() > 0.5 ? 'green' : 'red')
-      }, 1000)
+        setOpponentChoice(Math.random() > 0.5 ? "green" : "red");
+      }, 1000);
     }
-  }, [playerChoice])
+  }, [playerChoice]);
 
+  // Handles player choice and triggers the submitDecision hook
+  const handlePlayerChoice = async (choice: "green" | "red") => {
+    setPlayerChoice(choice);
+    try {
+      await submitDecision(); // Trigger the decision submission
+    } catch (error) {
+      console.error("Error submitting decision:", error);
+    }
+  };
 
-  // TODO: This is automatic should be done when the time of the round ends
   const advanceRound = () => {
-    if (playerChoice === 'green' && opponentChoice === 'green') {
-      setPlayerBalance(prev => prev + 10)
-      setGamePool(prev => prev - 20)
-    } else if (playerChoice === 'red' && opponentChoice === 'green') {
-      setPlayerBalance(prev => prev + 20)
-      setGamePool(prev => prev - 20)
+    if (playerChoice === "green" && opponentChoice === "green") {
+      setPlayerBalance((prev) => prev + 10);
+      setGamePool((prev) => prev - 20);
+    } else if (playerChoice === "red" && opponentChoice === "green") {
+      setPlayerBalance((prev) => prev + 20);
+      setGamePool((prev) => prev - 20);
     }
 
-    if (round < 5) setRound(round + 1)
-    setPlayerChoice(null)
-    setOpponentChoice(null)
-  }
+    if (round < 5) setRound(round + 1);
+    setPlayerChoice(null);
+    setOpponentChoice(null);
+  };
 
   return (
     <div className="bg-background w-screen h-screen overflow-hidden relative">
@@ -178,9 +192,7 @@ export default function ShortGameMode() {
             {/* Left half (black) */}
             <div className="text-white w-1/2">
               <div className="text-3xl mb-4">Round {round} of 5</div>
-              <div className="text-xl mb-6">
-                Total Game Pool: {gamePool} TRUST
-              </div>
+              <div className="text-xl mb-6">Total Game Pool: {gamePool} TRUST</div>
             </div>
             {/* Right half (white) */}
             <div className="text-black w-1/2">
@@ -189,20 +201,20 @@ export default function ShortGameMode() {
               </div>
             </div>
           </div>
-          
+
           <div className="flex flex-row justify-center">
             <RoundResult playerChoice={playerChoice} opponentChoice={opponentChoice} />
           </div>
-          
+
           <div className="w-full flex flex-row">
             {/* Left half (black) */}
             <div className="w-1/2 text-white p-8 flex flex-col">
               <div className="flex-1 flex flex-col justify-between">
                 <PlayerCard username="$username" balance={playerBalance} />
-                
+
                 <ChoiceButtons
                   playerChoice={playerChoice}
-                  setPlayerChoice={setPlayerChoice}
+                  handlePlayerChoice={handlePlayerChoice} // Pass the handlePlayerChoice function
                   disabled={!!opponentChoice}
                 />
               </div>
@@ -222,7 +234,7 @@ export default function ShortGameMode() {
                     disabled={!playerChoice || !opponentChoice}
                   >
                     Next Round
-                  </Button> 
+                  </Button>
                 </div>
               </div>
             </div>
@@ -230,5 +242,5 @@ export default function ShortGameMode() {
         </div>
       </Main>
     </div>
-  )
+  );
 }
