@@ -1,7 +1,6 @@
 import { ENDPOINTS, MODULE_NAMES } from '@/utils/constants';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 
-// Access fields / functions from the adapter
 const { signAndSubmitTransaction } = useWallet();
 
 /**

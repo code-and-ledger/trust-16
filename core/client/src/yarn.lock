@@ -1420,6 +1420,11 @@
   resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.5.2.tgz#db7257d727c891905947bd1c1a99da20e03c2ebd"
   integrity sha512-YAh82Wh4TIrxYLmfGcixwD18oIjyC1pFQC2Y01F2lzV2HTMiYrI0nze0FD0ocB//CKS/7jIUgae+adPqxK5yCQ==
 
+"@thalalabs/surf@^1.7.3":
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/@thalalabs/surf/-/surf-1.7.3.tgz#461ad6b658bb8341c8570ac467108f3e5602d70c"
+  integrity sha512-bhZzQgVCVGiYaUwuIclseO0UXZJh6YkjfFi8iuKcpclbIfxELOJPPvDKCdsIKYN+BVTw8UeOXQvfuLJYwRszhA==
+
 "@tsparticles/engine@^3.5.0":
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/@tsparticles/engine/-/engine-3.5.0.tgz#5de20741cc17193bc7a0b84e81dfd831c3d39364"

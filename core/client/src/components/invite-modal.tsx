@@ -1,12 +1,16 @@
-"use client"; // Ensures this component runs on the client side
+"use client";
 
+import { sessionCreated } from '@/app/api/events/session-created';
+import useAdminPrepareShortGame from '@/hooks/router/useAdminPrepareShortGame';
+import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk';
+import { useWallet } from '@aptos-labs/wallet-adapter-react';
 import { X } from 'lucide-react';
-import { useState } from 'react';
+import { use, useState } from 'react';
 
 interface InviteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onInviteSuccess: () => void;
+  onInviteSuccess: (response: any) => void; // Callback to pass the result
 }
 
 const InviteModal: React.FC<InviteModalProps> = ({ isOpen, onClose, onInviteSuccess }) => {
@@ -14,39 +18,41 @@ const InviteModal: React.FC<InviteModalProps> = ({ isOpen, onClose, onInviteSucc
   const [addr2, setAddr2] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  
   const handleSubmit = async () => {
-    if (!addr1) {
-      console.error('First wallet address is required');
+    if (!addr1 || addr1.length < 3 || !addr1.startsWith('0x')) {
+      console.error('First wallet address is required and must be valid');
       return;
     }
-
+    
+    if (addr2 && (addr2.length < 3 || !addr2.startsWith('0x'))) {
+      console.error('Second wallet address is optional but must be valid if provided');
+      return;
+    }
+    
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/start-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ addr1, addr2 }),
-      });
+      // Call the retrieved function with the provided addresses
+      const PrepareShortGame = useAdminPrepareShortGame(addr1, addr2);
+      const response = await PrepareShortGame();
+      // console.log('Response from useAdminPrepareShortGame:', response); // Debugging log
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Script executed successfully:', data);
-        onInviteSuccess(); // Trigger the success callback
-      } else {
-        console.error('Error executing script');
-      }
+      
+      const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
+      const events = await sessionCreated(aptos);
+      const event = events[events.length - 1].data; // Get the last event
+      console.log('Event:', event);
+      onInviteSuccess(event); // Pass the response to the parent component
     } catch (error) {
       console.error('Error submitting wallet addresses:', error);
+    } finally {
+      setIsLoading(false);
+      onClose(); // Close the modal after submission
     }
-
-    setIsLoading(false);
-    onClose(); // Close the modal after submission
   };
 
-  if (!isOpen) return null; // Return nothing if the modal is closed
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">

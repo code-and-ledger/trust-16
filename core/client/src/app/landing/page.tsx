@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Card, CardContent } from "../../components/ui/card";
 import Main from "../../components/main"; // Assuming Main component is in the same directory
 import SplashScreen from "../../components/splash-screen";
@@ -55,7 +55,7 @@ const LandingPage: React.FC = () => {
                                 <div className="w-1/2  relative group flex items-center justify-center">
                                     <div className="relative z-10 p-4 flex flex-col items-center justify-center">
                                         <div className="max-w-sm mx-auto relative h-[20rem]">
-                                            <EvervaultCard imageUrl="/chicken.jpg" level={5} money={10000} />
+                                            <EvervaultCard imageUrl="/flinch.png" level={5} money={10000} />
                                         </div>
                                     </div>
                                 </div>

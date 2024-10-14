@@ -26,7 +26,7 @@ export const EvervaultCard = ({
             alt="Player"
             width={250}
             height={250}
-            className={`-rotate-45 scale-[1.5] origin-center ${isOpponent ? '' : 'scale-x-[-1.5]'}`}
+            className={`-rotate-45 scale-[1.5] origin-center ${isOpponent ? '' : 'invert scale-x-[-1.5]'}`}
           />
         </div>
       </div>
