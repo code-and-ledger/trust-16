@@ -8,11 +8,13 @@ export const EvervaultCard = ({
   imageUrl,
   level = 1,
   money = 2000,
+  isOpponent = false,
   className,
 }: {
   imageUrl: string;
   level: number;
   money: number;
+  isOpponent?: boolean;
   className?: string;
 }) => {
   return (
@@ -24,7 +26,7 @@ export const EvervaultCard = ({
             alt="Player"
             width={176}
             height={176}
-            className="-rotate-45 scale-[1.5] origin-center"
+            className={`-rotate-45 scale-[1.5] origin-center ${isOpponent ? 'scale-x-[-1.5]' : ''}`}
           />
         </div>
       </div>

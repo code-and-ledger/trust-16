@@ -78,7 +78,13 @@ const GameInfoDialog = () => (
 const PlayerCard = ({ username, balance, isOpponent = false }) => (
   <div className={`text-center`}>
     <div className="max-w-sm mx-auto relative h-[20rem]">
-      <EvervaultCard imageUrl="/flinch.jpg" level={5} money={balance} />
+      {/* Conditionally apply the transform class to invert the image */}
+      <EvervaultCard 
+        imageUrl="/flinch.jpg" 
+        level={5} 
+        money={balance} 
+        isOpponent={isOpponent}
+      />
     </div>
     <div className="text-xl mt-4">{username}</div>
     <div className="tracking-wider text-sm">
