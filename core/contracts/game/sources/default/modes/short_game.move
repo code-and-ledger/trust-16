@@ -20,7 +20,7 @@ module trust_16::short_game {
     /// The total number of players allowed per game
     const PLAYERS_COUNT: u8 = 2;
     /// The total number of rounds in a game
-    const ROUNDS_COUNT: u8 = 5;
+    const ROUNDS_COUNT: u8 = 1;
     /// Round duration in seconds
     const ROUND_DURATION: u64 = 60; 
 
