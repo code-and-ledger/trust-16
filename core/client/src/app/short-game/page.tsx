@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react'
 import { Settings, Diamond, Info } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Main from "../../components/main"
@@ -80,7 +79,7 @@ const PlayerCard = ({ username, balance, isOpponent = false }) => (
     <div className="max-w-sm mx-auto relative h-[20rem]">
       {/* Conditionally apply the transform class to invert the image */}
       <EvervaultCard 
-        imageUrl="/flinch.jpg" 
+        imageUrl="/flinch.png" 
         level={5} 
         money={balance} 
         isOpponent={isOpponent}

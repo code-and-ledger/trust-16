@@ -19,14 +19,14 @@ export const EvervaultCard = ({
 }) => {
   return (
     <div className={cn("flex flex-col items-center justify-center", className)}>
-      <div className="w-36 h-36 mb-4">
+      <div className="w-40 h-40 mb-4">
         <div className="w-full h-full rotate-45 overflow-hidden">
           <Image
             src={imageUrl}
             alt="Player"
-            width={176}
-            height={176}
-            className={`-rotate-45 scale-[1.5] origin-center ${isOpponent ? 'scale-x-[-1.5]' : ''}`}
+            width={250}
+            height={250}
+            className={`-rotate-45 scale-[1.5] origin-center ${isOpponent ? '' : 'scale-x-[-1.5]'}`}
           />
         </div>
       </div>

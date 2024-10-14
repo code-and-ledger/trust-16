@@ -1,16 +1,20 @@
 "use client";
+
 import { Users, Search, Loader, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Image from 'next/image';
 import InviteModal from '../../components/invite-modal';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function MatchMakingPage() {
   const router = useRouter();
   const [isModalOpen, setModalOpen] = useState(false);
+  const [invitationSent, setInvitationSent] = useState(false); // Track if the invitation was successful
 
-  const handleAccept = () => {
-    router.push('/short-game'); // Navigate to short game mode
+  const handleInviteSuccess = () => {
+    setInvitationSent(true); // Update state after successful invitation
   };
 
   const handleInviteFriend = () => {
@@ -25,63 +29,80 @@ export default function MatchMakingPage() {
     router.push('/landing'); // Navigate back to the landing page
   };
 
+  const handleJoinGame = () => {
+    router.push('/short-game'); // Navigate to the game page
+  };
+
   return (
-    <div className="bg-black text-white p-4 w-screen h-screen flex justify-center items-center font-mono">
-      <div className="border border-white p-6 rounded max-w-full w-full h-full flex flex-col justify-center items-center">
-        <div className="text-center mb-6 border-b border-white pb-2 text-lg md:text-4xl w-full">
-          Matchmaking
-        </div>
-
-        <div className="text-xs md:text-sm mb-6 text-center w-full">
-          finding opponents. please wait. searching...
-        </div>
-
-        <div className="text-center mb-6 text-base md:text-lg w-full">
-          Players online: 42
-        </div>
-
-        <div className="flex justify-center mb-6">
-          <div className="border border-white p-4 rounded-full">
-            <Loader className="animate-spin" size={64} />
-          </div>
-        </div>
-
-        <div className="flex justify-around mb-6 w-full px-10">
-          <div className="text-center text-sm md:text-base">
-            <div>
-                <Image src="/flinch.jpg" alt="Player 1" width={75} height={75} className="rounded-full" />
+    <div className="bg-black min-h-screen flex items-center justify-center p-4 font-mono">
+      <Card className="w-full max-w-2xl bg-black text-white border-white">
+        <CardHeader>
+          <CardTitle className="text-2xl md:text-4xl text-center">Matchmaking</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <p className="text-sm md:text-base text-center text-muted-foreground">
+            Finding opponents. Please wait. Searching...
+          </p>
+          <p className="text-base md:text-lg text-center">
+            Players online: <span className="font-bold">--</span>
+          </p>
+          <div className="flex justify-center">
+            <div className="border border-white p-4 rounded-full">
+              <Loader className="animate-spin w-16 h-16 md:w-24 md:h-24" />
             </div>
-            <div className="mt-2">You</div>
           </div>
-          <div className="text-center flex items-center">
-            <Search size={32} />
+          <div className="flex justify-between items-center px-4 md:px-10">
+            <div className="text-center">
+              <Image src="/flinch.png" alt="Player 1" width={75} height={75} className="rounded-full mx-auto" />
+              <p className="mt-2 text-sm md:text-base">You</p>
+            </div>
+            <Search className="w-8 h-8 md:w-12 md:h-12" />
+            <div className="text-center">
+              <div className="w-[75px] h-[75px] bg-gray-700 rounded-full flex items-center justify-center mx-auto">
+                <span className="text-2xl">?</span>
+              </div>
+              <p className="mt-2 text-sm md:text-base">Opponent</p>
+            </div>
           </div>
-          <div className="text-center text-sm md:text-base">
-            <div>?<br />?<br />? ?</div>
-            <div className="mt-2">Opponent</div>
-          </div>
-        </div>
+          <p className="text-base md:text-lg text-center">
+            Estimated wait time: <span className="font-bold">--:--</span>
+          </p>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          {/* Conditionally render "Join Game" or "Invite Friend" button */}
+          {invitationSent ? (
+            <Button
+              onClick={handleJoinGame}
+              className="bg-green-500 text-white border border-white px-4 py-2 rounded flex items-center text-sm md:text-base transition-all duration-300 ease-in-out"
+            >
+              Join Game
+            </Button>
+          ) : (
+            <Button
+              onClick={handleInviteFriend}
+              className="bg-black text-white border border-white px-4 py-2 rounded flex items-center text-sm md:text-base transition-all duration-300 ease-in-out hover:bg-white hover:text-black hover:scale-105"
+            >
+              <Users className="w-5 h-5 mr-2" />
+              <span>Invite friend</span>
+            </Button>
+          )}
 
-        <div className="text-center mb-6 text-base md:text-lg w-full">
-          Estimated wait time: 0:42
-        </div>
+          <Button
+            variant="outline"
+            onClick={handleCancel}
+            className="bg-black text-white border border-white px-4 py-2 rounded flex items-center text-sm md:text-base transition-all duration-300 ease-in-out hover:bg-white hover:text-black hover:scale-105"
+          >
+            <span>Cancel</span>
+            <X className="w-5 h-5 ml-2" />
+          </Button>
+        </CardFooter>
+      </Card>
 
-        <div className="flex justify-between w-full px-10">
-          <button onClick={handleAccept} className="border border-white px-4 py-2 rounded flex items-center text-sm md:text-base">
-            Accept
-          </button>
-          <button onClick={handleInviteFriend} className="border border-white px-4 py-2 rounded flex items-center text-sm md:text-base">
-            <Users className="w-5 h-5 mr-2 md:w-6 md:h-6" />
-            Invite friend
-          </button>
-          <button onClick={handleCancel} className="border border-white px-4 py-2 rounded flex items-center text-sm md:text-base">
-            Cancel
-            <X className="w-5 h-5 ml-2 md:w-6 md:h-6" />
-          </button>
-        </div>
-      </div>
-
-      <InviteModal isOpen={isModalOpen} onClose={handleCloseModal} />
+      <InviteModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onInviteSuccess={handleInviteSuccess} // Handle success to show "Join Game" button
+      />
     </div>
   );
 }
