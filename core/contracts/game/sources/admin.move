@@ -20,4 +20,12 @@ module trust_16::admin {
         // init session
         session::init(deployer);
     }
+
+    // ---------
+    // Unit Test
+    // ---------
+
+    public fun init_for_test(deployer: &signer) {
+        init_module(deployer);
+    }
 }

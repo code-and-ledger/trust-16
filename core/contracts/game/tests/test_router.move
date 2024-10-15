@@ -16,18 +16,18 @@ module trust_16::test_router {
 
     const PEPPER: vector<u8> = b"trust_test";
 
-    #[test(aptos_framework = @0x1, dev = @dev, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
-    public fun admin_prepare_short_game(aptos_framework: &signer, dev: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
-        test_utils::setup_test(aptos_framework, dev, trust_16, session_manager, alice, bob, charlie);
+    #[test(aptos_framework = @0x1, dev = @dev, trust_coin = @trust_coin, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
+    public fun admin_prepare_short_game(aptos_framework: &signer, dev: &signer, trust_coin: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
+        test_utils::setup_test(aptos_framework, dev, trust_coin, trust_16, session_manager, alice, bob, charlie);
         router::admin_prepare_short_game(
             session_manager,
             vector[signer::address_of(alice), signer::address_of(bob)]
         );
     }
 
-    #[test(aptos_framework = @0x1, dev = @dev, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
-    public fun short_game(aptos_framework: &signer, dev: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
-        test_utils::setup_test(aptos_framework, dev, trust_16, session_manager, alice, bob, charlie);
+    #[test(aptos_framework = @0x1, dev = @dev, trust_coin = @trust_coin, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
+    public fun short_game(aptos_framework: &signer, dev: &signer, trust_coin: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
+        test_utils::setup_test(aptos_framework, dev, trust_coin, trust_16, session_manager, alice, bob, charlie);
         let session_id = router::admin_prepare_short_game_for_test(
             session_manager,
             vector[signer::address_of(alice), signer::address_of(bob)]
