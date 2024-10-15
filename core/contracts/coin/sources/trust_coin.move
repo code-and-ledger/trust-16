@@ -4,10 +4,10 @@
     - transfer mechanism:
     - minting mechanism: (exchange data)
 
+    NOTE: this module is out of scope for the PoC
+
     TODO:
-			- remove entry keyword from the mint function
-			- mint function should mint the double of the amount. make the function returns that amount. 
-            - create withdraw object from defined seed and add it to the withdrawers list
+		- mint function should mint the double of the amount. make the function returns that amount. 
 */
 module trust_coin::trust_coin {
     use aptos_framework::aptos_coin::{AptosCoin as APT};
@@ -35,6 +35,8 @@ module trust_coin::trust_coin {
     const REMOVED: vector<u8> = b"Undenylisted";
     const TRUST_NAME: vector<u8> = b"Trust Coin";
     const TRUST_SYMBOL: vector<u8> = b"TRUST";
+    const ICON: vector<u8> = b"https://trust-16.com/favicon.ico";
+    const PROJECT: vector<u8> = b"https://trust-16.com";
     // The seed for the mint object
     const MINT_SEED: vector<u8> = b"trust_coin::mint";
     // The seed for the withdraw object
@@ -215,7 +217,7 @@ module trust_coin::trust_coin {
     }
 
     /// Initializer function
-    entry fun init(deployer: &signer) {
+    fun init_module(deployer: &signer) {
         // assert!(signer::address_of(deployer) == @dev, 0xc1);
         // Create the coin with primary store support.
         let constructor_ref = &object::create_named_object(deployer, TRUST_SYMBOL);
@@ -225,23 +227,20 @@ module trust_coin::trust_coin {
             string::utf8(TRUST_NAME),
             string::utf8(TRUST_SYMBOL),
             8,
-            string::utf8(b"https://trust-16.com/favicon.ico"),    // TODO: set icon
-            string::utf8(b"https://trust-16.com"),    // TODO: set website
+            string::utf8(ICON),
+            string::utf8(PROJECT),
         );
 
         // Set ALL stores for the fungible asset to untransferable.
         fungible_asset::set_untransferable(constructor_ref);
-        
-        // get the address of the withdraw object
-        let withdraw_obj_addr = object::create_object_address(&@trust_coin, WITHDRAW_SEED);
 
         // All resources created will be kept in the asset metadata object.
         let obj_signer_ref = &object::generate_signer(constructor_ref);
         move_to(obj_signer_ref, Roles {
-            denylisters: vector[signer::address_of(deployer)],
-            minters: vector[signer::address_of(deployer)],
-            pausers: vector[signer::address_of(deployer), withdraw_obj_addr],
-            withdrawers: vector[signer::address_of(deployer)],
+            denylisters: vector[@dev],
+            minters: vector[@dev],
+            pausers: vector[@dev],
+            withdrawers: vector[@dev],
         });
 
         // Create mint/burn/transfer refs to allow creator to manage the coin.
@@ -255,40 +254,18 @@ module trust_coin::trust_coin {
 
         // initiate the default exchange table
         let default = smart_table::new<String, ExchangeData>();
-        // add the rates for the default exchange table
-        add_exchange_entry_internal(
-            &mut default,
-            apt_metadata(),
-            1_00000000,   // 1 APT
-            100_00000000,   // 100 TRUST
-            option::none(),
-            option::none(),
-        );
         // initiate the limited exchange table
         let limited = smart_table::new<String, ExchangeData>();
 
         move_to(obj_signer_ref, ExchangeRates { default, limited });
+        
 
-        // Override the deposit and withdraw function.
-        // This ensures all transfer will call the withdraw function in this module and ...
-        // TODO
-        // let deposit = function_info::new_function_info(
-        //     deployer,
-        //     string::utf8(b"trust_coin"),
-        //     string::utf8(b"trust_coin"),
-        // );
         let withdraw = function_info::new_function_info(
             deployer,
             string::utf8(b"trust_coin"),
             string::utf8(b"withdraw"),
         );
 
-        // dispatchable_fungible_asset::register_dispatch_functions(
-        //     constructor_ref,
-        //     option::some(deposit),
-        //     option::none(),
-        //     option::none(),
-        // );
         dispatchable_fungible_asset::register_dispatch_functions(
             constructor_ref,
             option::some(withdraw),
@@ -296,19 +273,6 @@ module trust_coin::trust_coin {
             option::none(),
         );
     }
-
-    // /// Deposit function override to ensure that the account is not denylisted and the coin is not paused.
-    // public fun deposit<T: key>(
-    //     store: Object<T>,
-    //     fa: FungibleAsset,
-    //     transfer_ref: &TransferRef,
-    // ) acquires State {
-    //     assert_not_paused();
-    //     // check if the account has primary store for the fa, if not create one
-    //     primary_fungible_store::ensure_primary_store_exists(object::owner(store), metadata());
-    //     // assert_allowlisted(object::owner(store));
-    //     fungible_asset::deposit_with_ref(transfer_ref, store, fa);
-    // }
 
     /// Withdraw function override to impose requirements on the account
     /// Callable only by admins or allowed accounts
@@ -350,18 +314,6 @@ module trust_coin::trust_coin {
 
         // TODO: add events for rewards pool
     }
-
-    // /* Transfer */
-    // /// Transfer assets from one account to another.
-    // public entry fun transfer(obj_signer_ref: &signer, to: address, amount: u64) acquires Management, Roles, State {
-    //     assert_withdrawer(obj_signer_ref);
-    //     // Withdraw the assets from the sender's store and deposit them to the recipient's store.
-    //     let management = borrow_global<Management>(coin_address());
-    //     let obj_store = primary_fungible_store::ensure_primary_store_exists(signer::address_of(obj_signer_ref), metadata());
-    //     let to_store = primary_fungible_store::ensure_primary_store_exists(to, metadata());
-    //     let assets = withdraw<FungibleStore>(obj_store, amount, &management.transfer_ref);
-    //     fungible_asset::deposit_with_ref(&management.transfer_ref, to_store, assets);
-    // }
 
     /// Burn assets from the specified account.
     public entry fun burn(obj_signer_ref: &signer, from: address, amount: u64) acquires Management, State {
