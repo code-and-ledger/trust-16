@@ -40,11 +40,11 @@ const InviteModal: React.FC<InviteModalProps> = ({ isOpen, onClose, onInviteSucc
 
       const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
       const events = await sessionCreated(aptos);
-      const event = events[events.length - 1].data; // Get the last event
+      const event = events[events.length - 1].data;
       console.log('Event:', event);
       onInviteSuccess(event); // Pass the response to the parent component
     } catch (error) {
-      console.error('Error submitting wallet addresses:', error);
+      console.error(error);
     } finally {
       setIsLoading(false);
       onClose(); // Close the modal after submission

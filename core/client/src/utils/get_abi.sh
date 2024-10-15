@@ -3,7 +3,7 @@
 # replace it with the network your contract lives on
 NETWORK=testnet
 # replace it with your contract address
-CONTRACT_ADDRESS=0xde34c33a63e37a84c44bb038893b5ed605c715736cd1da113931a47874455139
+CONTRACT_ADDRESS=0x1b70e6e213bfb725f372840f616b3b6339d5ef17c0cacb3fe9a6ca79be1afbfd
 # replace it with your module name, every .move file except move script has module_address::module_name {}
 MODULE_NAME=router
  
