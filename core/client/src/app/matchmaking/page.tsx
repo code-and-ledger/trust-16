@@ -111,7 +111,9 @@ export default function MatchMakingPage() {
             <div className="text-center">
               <Image src="/flinch.png" alt="Player 1" width={75} height={75} className="rounded-full mx-auto" />
               <p className="mt-2 text-sm md:text-base">You</p>
-              {/* TODO: display wallet address here */}
+              <p className="text-xs md:text-sm text-center text-muted-foreground">
+                {account?.address ? `${account.address.slice(0, 6)}...${account.address.slice(-4)}` : 'Not connected'}
+              </p>
             </div>
               <div className="text-center">
                 <div className="w-[75px] h-[75px] bg-gray-700 rounded-full flex items-center justify-center mx-auto">
