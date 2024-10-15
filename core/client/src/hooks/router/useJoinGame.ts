@@ -9,7 +9,7 @@ const useJoinGame = (accountAddress: string, sessionID: string) => {
       const response = await signAndSubmitTransaction({
         sender: accountAddress,
         data: {
-          function: `${TRUST_16_TESTNET}::${MODULE_NAMES.ROUTER}::${ENDPOINTS[MODULE_NAMES.ROUTER].JOIN_GAME}` as any,
+          function: `${TRUST_16_TESTNET}::${MODULE_NAMES.ROUTER}::${ENDPOINTS[MODULE_NAMES.ROUTER].JOIN_GAME}`,
           typeArguments: [],
           functionArguments: [sessionID],
         }

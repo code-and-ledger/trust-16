@@ -11,7 +11,7 @@ import {
      */
     const sessionCreatedEvent = await aptos.getModuleEventsByEventType({
 
-    eventType: `0x71907fa0ce462844261c89c85711a9e20d906281f87dc95f6f9010ebe991bebb::${MODULE_NAMES.ROUTER}::${EVENTS_NAMES.SESSION_CREATED}` as any,
+    eventType: `0xcf4bffccb2fda4d8bade961d03514d9daa06f2de0f43c8122ecbe1bbd6c9742::router::SessionCreated`,
       minimumLedgerVersion: 0,
     });
   
