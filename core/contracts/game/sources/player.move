@@ -6,28 +6,18 @@
     - decisions ledger: a vector of x last decisions made by the player
     - a metric (reputation by the time of writing) that is used to determine the player's eligibility to play a game
 
+    NOTE: This module is out of scope for the PoC
+
     TODO: 
         - Work on the metric mentioned in as reputation
         - Add consumables that when used, can see x*2 previous decisions of opponents
 */
 
 module trust_16::player {
-    use aptos_framework::dispatchable_fungible_asset;
     use aptos_framework::event;
-    use aptos_framework::fungible_asset::{Self, Metadata, FungibleAsset};
-    use aptos_framework::object::{Self, Object};
-    use aptos_framework::primary_fungible_store;
     use aptos_framework::smart_vector::{Self, SmartVector};
-    use aptos_framework::timestamp;
-    use aptos_std::option::{Self, Option};
     use std::signer;
     use std::vector;
-
-    // ---------
-    // Constants
-    // ---------
-
-
 
     // ------
     // Errors
@@ -99,20 +89,6 @@ module trust_16::player {
         // get the last x decisions
         vector::slice(&decision_ledger, 0, x)
     }
-
-    // ----------------
-    // Helper Functions
-    // ----------------
-
-
-
-    // --------------
-    // View Functions
-    // --------------
-
-    // ---------
-    // Unit Test
-    // ---------
 
 }
 

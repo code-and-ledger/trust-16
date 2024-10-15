@@ -1,7 +1,5 @@
 /*
     This module defines the logic for the fixed short move mode.
-
-    TODO:
     
 */
 
@@ -42,7 +40,7 @@ module trust_16::short_game {
     // Entry Functions
     // ---------------
     
-    /// TODO: prepare game
+    /// prepare game
     public(friend) fun prepare_game(players: vector<address>): address {
         assert!(vector::length(&players) == (PLAYERS_COUNT as u64), EPLAYERS_COUNT_INVALID);
         let durations = vector::empty<u64>();

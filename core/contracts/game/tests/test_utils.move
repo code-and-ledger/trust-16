@@ -27,10 +27,11 @@ module trust_16::test_utils {
 
     const AMOUNT: u64 = 1_000_00000000; // 1000 APT
 
-    public fun setup_test(aptos_framework: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
+    public fun setup_test(aptos_framework: &signer, dev: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
         
         // init accounts
         account::create_account_for_test(signer::address_of(aptos_framework));
+        account::create_account_for_test(signer::address_of(dev));
         account::create_account_for_test(signer::address_of(trust_16));
         account::create_account_for_test(signer::address_of(session_manager));
         account::create_account_for_test(signer::address_of(alice));
@@ -66,8 +67,8 @@ module trust_16::test_utils {
         option::extract<Object<fungible_asset::Metadata>>(&mut paired_metadata_opt)
     }
 
-    public fun setup_test_with_genesis(aptos_framework: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
+    public fun setup_test_with_genesis(aptos_framework: &signer, dev: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
         genesis::setup();
-        setup_test(aptos_framework, trust_16, session_manager, alice, bob, charlie);
+        setup_test(aptos_framework, dev, trust_16, session_manager, alice, bob, charlie);
     }
 }

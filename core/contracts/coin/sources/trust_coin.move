@@ -216,7 +216,7 @@ module trust_coin::trust_coin {
 
     /// Initializer function
     entry fun init(deployer: &signer) {
-        assert!(signer::address_of(deployer) == @dev, 0xc1);
+        // assert!(signer::address_of(deployer) == @dev, 0xc1);
         // Create the coin with primary store support.
         let constructor_ref = &object::create_named_object(deployer, TRUST_SYMBOL);
         primary_fungible_store::create_primary_store_enabled_fungible_asset(

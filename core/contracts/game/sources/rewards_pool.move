@@ -5,6 +5,11 @@
     - dual mint purchases
     - cooperate-compete rounds
     - power-ups
+
+    NOTE: This module is out of scope for the PoC
+
+    TODO:
+        - support will be added in the future for the rewards pool
 */
 
 module trust_16::rewards_pool {
@@ -13,20 +18,11 @@ module trust_16::rewards_pool {
     use aptos_framework::fungible_asset::{Self, FungibleAsset, FungibleStore, Metadata};
     use aptos_framework::primary_fungible_store;
     use std::object::{Self, Object};
-    use std::signer;
     use trust_coin::trust_coin;
 
     friend trust_16::admin;
     friend trust_16::mechanics;
     friend trust_16::router;
-
-    // ---------
-    // Constants
-    // ---------
-
-    // ------
-    // Errors
-    // ------
 
     // ---------
     // Resources
@@ -38,13 +34,7 @@ module trust_16::rewards_pool {
         // used for the withdraws
         extend_ref: object::ExtendRef
     }
-
-    // ------
-    // Events
-    // ------
-
-
-
+    
     // --------------------
     // Initializer Function
     // --------------------

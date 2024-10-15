@@ -6,17 +6,10 @@
     - resources: Containting the the addresses of matched wallets
     - The deposited amount
     - The game type
-
-    TODO: 
-        - debate on whether we delete Badge and use tracker.move instead
-        - add events
 */
 
 module trust_16::session {
-    use aptos_framework::dispatchable_fungible_asset;
-    use aptos_framework::fungible_asset::{Self, Metadata, FungibleAsset};
-    use aptos_framework::object::{Self, Object};
-    use aptos_framework::primary_fungible_store;
+    use aptos_framework::object;
     use aptos_framework::smart_vector::{Self, SmartVector};
     use aptos_framework::timestamp;
     use aptos_std::option::{Self, Option};
@@ -25,10 +18,6 @@ module trust_16::session {
 
     friend trust_16::admin;
     friend trust_16::mechanics;
-
-    // ---------
-    // Constants
-    // ---------
 
     // ------
     // Errors
@@ -67,12 +56,6 @@ module trust_16::session {
         // address of the object holding the session data
         session_id: address
     }
-
-    // ------
-    // Events
-    // ------
-
-    /// TODO: game creation events must be defined in game types modules
 
     // -------
     // Asserts

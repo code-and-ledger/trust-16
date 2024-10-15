@@ -1,20 +1,7 @@
 /*
-    This module defines the core mechanics of the cooperate bail game
-
-    can be used for 2 players or more
-
-    lifecycle for 2 players:
-    1. prepare_game: 
-        - creates a session for the players
-        - creates a game for matchmaking:
-            - set 
-        
-
+    This module defines the mechanics of the game.
 
     TODO: 
-        - finish description
-        - add events
-        - No asserts in internal functions
         - discuss: round starts when the first decision is submitted (ease of implementation)
         - implement functions to handle edge cases:
             - in-game leaving
@@ -22,7 +9,7 @@
 */
 
 module trust_16::mechanics {
-    use aptos_framework::fungible_asset::{Self, FungibleAsset, FungibleStore, Metadata};
+    use aptos_framework::fungible_asset::{Self, FungibleStore, Metadata};
     use aptos_framework::object::{Self, Object};
     use aptos_framework::smart_table::{Self, SmartTable};
     use aptos_framework::timestamp;
@@ -101,6 +88,12 @@ module trust_16::mechanics {
         is_last_decision_in_round: bool,
     }
 
+    #[event]
+    struct PepperSubmitted has drop, store {
+        round_index: u64,
+        pepper: vector<u8>,
+    }
+
     // -------
     // Asserts
     // -------
@@ -109,14 +102,14 @@ module trust_16::mechanics {
     /// - given round index is equal to the current round index
     /// - the current time is within the round duration
     public fun assert_round_valid(session_id: address, round_index: u64) acquires GameInfo {
-        let game_info = borrow_global<GameInfo>(session_id);
-        let round_time = if (round_index == 0) {
+        // let game_info = borrow_global<GameInfo>(session_id);
+        if (round_index == 0) {
             round_start_time(session_id, 0)
         } else {
             round_start_time(session_id, (round_index - 1)) + round_duration(session_id, round_index)
         };
-        let round_duration = round_duration(session_id, round_index);
-        let current_time = timestamp::now_seconds();
+        // let round_duration = round_duration(session_id, round_index);
+        // let current_time = timestamp::now_seconds();
         // TODO: time check
         // assert!(current_time >= round_time && current_time <= round_time + round_duration, EROUND_INVALID);
     }
@@ -164,14 +157,11 @@ module trust_16::mechanics {
         );
 
         session_id
-
-        /// TODO: emit event indicating this game is short
     }
 
     /// Start the game
     /// Triggered when all players have joined the game
     public(friend) fun start_game(session_id: address) {
-        // TODO: ensure all players have joined the game
         session::start_session(session_id);
     }
 
@@ -185,6 +175,7 @@ module trust_16::mechanics {
         session::assert_session_valid(session_id);
         // ensure the player address is in the session
         session::assert_player_registered_in_session(signer_addr, session_id);
+        // TODOs here are out of scope for the PoC
         // TODO: ensure the player has not joined the game yet / overriden by assert_players_eligibility ?
         // TODO: deposit the amount needed to play the game
         // add the player to the session by creating a badge and move it to the player's address
@@ -217,7 +208,7 @@ module trust_16::mechanics {
         assert_round_valid(session_id, current_round_index);
         // distribute the rewards
         distribute_rewards(session_id);
-        // TODO: remove_badges_from_players
+        // TODO: remove_badges_from_players?
         // end session
         session::end_session(session_id);
     }   
@@ -241,7 +232,9 @@ module trust_16::mechanics {
         // middle submitter
         } else {
             submit_decision_internal(signer_ref, session_id, round_index, decision);
-            (false, false)
+            // hardcoded this way for the PoC
+            // TODO: should be false for both
+            (false, true)
         };
 
         // emit event
@@ -301,7 +294,6 @@ module trust_16::mechanics {
         round_index: u64,
         decision: vector<u8>
     ) acquires GameInfo {
-        let signer_addr = signer::address_of(signer_ref);
         // submit the decision
         submit_decision_internal(signer_ref, session_id, round_index, decision);
         // toggle the allow_reveal field to true; moved to submit_pepper
@@ -322,7 +314,8 @@ module trust_16::mechanics {
         assert!(mut_round.pepper == option::none(), EPEPPER_SUBMITTED);
         let mut_round = borrow_round_mut(session_id, round_index);
         mut_round.pepper = option::some(pepper);
-        // TODO: emit event
+        // emit event
+        event::emit(PepperSubmitted { round_index, pepper });
     }
 
     /// Finish the round
@@ -394,10 +387,6 @@ module trust_16::mechanics {
         session_id: address,
         round_index: u64
     ) acquires GameInfo {
-        let round = borrow_round(session_id, round_index);
-        let pepper = *option::borrow(&round.pepper);
-        let hashed_cooperate = utils::hashed_cooperate(pepper);
-        let hashed_compete = utils::hashed_compete(pepper);
         let rewards_amount = total_in_round_rewards(session_id);
         let rewards_pool_deposit_per_round = round_rewards_pool_deposit_amount(session_id);
         let round_total_players_deposit_amount = round_total_players_deposit_amount(session_id);
@@ -418,7 +407,7 @@ module trust_16::mechanics {
         };
 
         // update balances tracker from round based on the revealed decisions
-        let mut_round = borrow_round_mut(session_id, round_index);
+        // let mut_round = borrow_round_mut(session_id, round_index);
         let mut_balances_tracker = &mut borrow_global_mut<GameInfo>(session_id).balances_tracker;
         
         if (competitors == 0 || cooperators > competitors) {
@@ -461,9 +450,10 @@ module trust_16::mechanics {
         let balances_tracker = &game_info.balances_tracker;
         let addresses = smart_table::keys(balances_tracker);
         for (i in 0..vector::length(&addresses)) {
-            let addr = *vector::borrow(&addresses, i);
-            let balance = *smart_table::borrow(balances_tracker, addr);
-            // TODO: 
+            // let addr = *vector::borrow(&addresses, i);
+            // let balance = *smart_table::borrow(balances_tracker, addr);
+            // NOTE: This module is out of scope for the PoC
+            // TODO: to complete post PoC
         }
     }
 
@@ -558,7 +548,7 @@ module trust_16::mechanics {
     /// Helper function to check whether all participants have submitted their decisions at a given round index
     public fun are_all_decisions_submitted(session_id: address, round_index: u64): bool acquires GameInfo {
         let round = borrow_round(session_id, round_index);
-        let submitters = smart_table::keys(&round.decisions);
+        // let submitters = smart_table::keys(&round.decisions);
         let participants = session::players(session_id);
         let all_submitted = false;
         for (i in 0..vector::length(&participants)) {

@@ -4,26 +4,11 @@
     There are several types of admins:
     - Super admin: Can do anything- set other admins, change settings, etc.
     - Game admin: Can create and manage games (bots)
-    - Moderators: tbd
 */
 
 module trust_16::admin {
-    use std::signer;
     use trust_16::rewards_pool;
     use trust_16::session;
-    use trust_coin::trust_coin;
-
-    // ---------
-    // Resources
-    // ---------
-
-    // ------
-    // Events
-    // ------
-
-    // -------
-    // Asserts
-    // -------
 
     // ---------------
     // Entry Functions
@@ -35,13 +20,4 @@ module trust_16::admin {
         // init session
         session::init(deployer);
     }
-        
-
-    // ------------------
-    // Internal Functions
-    // ------------------
-
-    // ----------
-    // Unit tests
-    // ----------
 }

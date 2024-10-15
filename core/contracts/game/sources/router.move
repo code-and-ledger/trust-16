@@ -1,4 +1,8 @@
 /*
+    This module defines the router for the game.
+    
+    Users should interact with this module to submit data on the game.
+
     TODO:
         - Add description
         - Move the mint function here
@@ -7,12 +11,10 @@
 module trust_16::router {
 
     use aptos_framework::event;
-    use std::vector;
     use std::signer;
     use std::string::{Self, String};
     use trust_16::mechanics;
     use trust_16::short_game;
-    use trust_16::long_game;
 
     // ---------
     // Constants

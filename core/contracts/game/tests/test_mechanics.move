@@ -16,9 +16,9 @@ module trust_16::test_mechanics {
 
     const PEPPER: vector<u8> = b"trust_test";
 
-    #[test(aptos_framework = @0x1, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
-    public fun prepare_game(aptos_framework: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
-        test_utils::setup_test(aptos_framework, trust_16, session_manager, alice, bob, charlie);
+    #[test(aptos_framework = @0x1, dev = @dev, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
+    public fun prepare_game(aptos_framework: &signer, dev: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
+        test_utils::setup_test(aptos_framework, dev, trust_16, session_manager, alice, bob, charlie);
         let session_id = mechanics::prepare_game(
             mechanics::game_type_for_test(),
             vector[signer::address_of(alice), signer::address_of(bob), signer::address_of(charlie)],
@@ -27,9 +27,9 @@ module trust_16::test_mechanics {
         );
     }
 
-    #[test(aptos_framework = @0x1, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
-    public fun join_game(aptos_framework: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
-        test_utils::setup_test(aptos_framework, trust_16, session_manager, alice, bob, charlie);
+    #[test(aptos_framework = @0x1, dev = @dev, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
+    public fun join_game(aptos_framework: &signer, dev: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
+        test_utils::setup_test(aptos_framework, dev, trust_16, session_manager, alice, bob, charlie);
         let session_id = mechanics::prepare_game(
             mechanics::game_type_for_test(),
             vector[signer::address_of(alice), signer::address_of(bob), signer::address_of(charlie)],
@@ -39,9 +39,9 @@ module trust_16::test_mechanics {
         mechanics::join_game(alice, session_id);
     }
 
-    #[test(aptos_framework = @0x1, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
-    public fun start_game(aptos_framework: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
-        test_utils::setup_test(aptos_framework, trust_16, session_manager, alice, bob, charlie);
+    #[test(aptos_framework = @0x1, dev = @dev, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
+    public fun start_game(aptos_framework: &signer, dev: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
+        test_utils::setup_test(aptos_framework, dev, trust_16, session_manager, alice, bob, charlie);
         // start session
         let session_id = mechanics::prepare_game(
             mechanics::game_type_for_test(),
@@ -55,9 +55,9 @@ module trust_16::test_mechanics {
         // game automatically starts when all players joined
     }
 
-    #[test(aptos_framework = @0x1, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
-    public fun submit_first_decision(aptos_framework: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
-        test_utils::setup_test(aptos_framework, trust_16, session_manager, alice, bob, charlie);
+    #[test(aptos_framework = @0x1, dev = @dev, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
+    public fun submit_first_decision(aptos_framework: &signer, dev: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
+        test_utils::setup_test(aptos_framework, dev, trust_16, session_manager, alice, bob, charlie);
         // start session
         let session_id = mechanics::prepare_game(
             mechanics::game_type_for_test(),
@@ -85,9 +85,9 @@ module trust_16::test_mechanics {
         assert!(mechanics::live_round_index(session_id) == 0, 1);
     }
 
-    #[test(aptos_framework = @0x1, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
-    public fun round_e2e(aptos_framework: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
-        test_utils::setup_test(aptos_framework, trust_16, session_manager, alice, bob, charlie);
+    #[test(aptos_framework = @0x1, dev = @dev, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
+    public fun round_e2e(aptos_framework: &signer, dev: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
+        test_utils::setup_test(aptos_framework, dev, trust_16, session_manager, alice, bob, charlie);
         // start session
         let session_id = mechanics::prepare_game(
             mechanics::game_type_for_test(),
@@ -119,9 +119,9 @@ module trust_16::test_mechanics {
         mechanics::finish_round(session_id, 0);
     }
 
-    #[test(aptos_framework = @0x1, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
-    public fun game_e2e(aptos_framework: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
-        test_utils::setup_test(aptos_framework, trust_16, session_manager, alice, bob, charlie);
+    #[test(aptos_framework = @0x1, dev = @dev, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
+    public fun game_e2e(aptos_framework: &signer, dev: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
+        test_utils::setup_test(aptos_framework, dev, trust_16, session_manager, alice, bob, charlie);
         // start session
         let session_id = mechanics::prepare_game(
             mechanics::game_type_for_test(),
