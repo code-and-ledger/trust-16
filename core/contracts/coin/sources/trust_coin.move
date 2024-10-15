@@ -524,7 +524,7 @@ module trust_coin::trust_coin {
     #[view]
     /// Returns the address of trust coin
     public fun coin_address(): address {
-        object::create_object_address(&@dev, TRUST_SYMBOL)
+        object::create_object_address(&@trust_coin, TRUST_SYMBOL)
     }
 
     #[view]

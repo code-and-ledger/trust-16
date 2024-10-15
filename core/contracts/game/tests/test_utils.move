@@ -29,7 +29,6 @@ module trust_16::test_utils {
     const AMOUNT: u64 = 1_000_00000000; // 1000 APT
 
     public fun setup_test(aptos_framework: &signer, dev: &signer, trust_coin: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
-        
         // init accounts
         account::create_account_for_test(signer::address_of(aptos_framework));
         account::create_account_for_test(signer::address_of(dev));
@@ -53,8 +52,6 @@ module trust_16::test_utils {
 
         // init modules
         trust_coin::init_for_test(trust_coin);
-        // rewards_pool::init(trust_16, trust_coin::metadata());
-        // session::init_for_test(trust_coin);
         admin::init_for_test(trust_16);
         timestamp::set_time_has_started_for_testing(aptos_framework);
         randomness::initialize_for_testing(aptos_framework);
