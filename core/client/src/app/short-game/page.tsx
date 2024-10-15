@@ -96,9 +96,9 @@ const ChoiceButtons = ({ playerChoice, handlePlayerChoice, disabled }) => (
       variant="outline"
       size="lg"
       className={`text-2xl text-primary font-bold transition-all duration-300 ${
-        playerChoice === "green" ? "bg-green-500 text-white scale-110" : "hover:bg-green-200"
+        playerChoice === true ? "bg-green-500 text-white scale-110" : "hover:bg-green-200"
       }`}
-      onClick={() => handlePlayerChoice("green")}
+      onClick={() => handlePlayerChoice(true)}
       disabled={disabled}
     >
       Cooperate
@@ -107,9 +107,9 @@ const ChoiceButtons = ({ playerChoice, handlePlayerChoice, disabled }) => (
       variant="outline"
       size="lg"
       className={`text-primary text-2xl font-bold transition-all duration-300 ${
-        playerChoice === "red" ? "bg-red-500 text-white scale-110" : "hover:bg-red-200"
+        playerChoice === false ? "bg-red-500 text-white scale-110" : "hover:bg-red-200"
       }`}
-      onClick={() => handlePlayerChoice("red")}
+      onClick={() => handlePlayerChoice(false)}
       disabled={disabled}
     >
       Compete
@@ -123,12 +123,12 @@ const RoundResult = ({ playerChoice, opponentChoice }) => (
     <div className="flex rounded-full overflow-hidden">
       <div className="bg-white border-2 border-black p-4">
         <div className="text-3xl font-bold flex items-center">
-          <span className="text-black">{playerChoice === "green" ? "G" : playerChoice === "red" ? "R" : "-"}</span>
+          <span className="text-black">{playerChoice === true ? "G" : playerChoice === false ? "R" : "-"}</span>
         </div>
       </div>
       <div className="bg-black border-2 border-white p-4">
         <div className="text-3xl font-bold flex items-center">
-          <span className="text-white">{opponentChoice === "green" ? "G" : opponentChoice === "red" ? "R" : "-"}</span>
+          <span className="text-white">{opponentChoice === true ? "G" : opponentChoice === false ? "R" : "-"}</span>
         </div>
       </div>
     </div>
@@ -139,47 +139,50 @@ export default function ShortGameMode() {
   const searchParams = useSearchParams();
   const sessionID = searchParams.get('sessionId') || '';
   const [round, setRound] = useState(1);
-  // TODO: decsion should be a boolean
-  const [playerChoice, setPlayerChoice] = useState<"green" | "red" | null>(null);
-  const [opponentChoice, setOpponentChoice] = useState<"green" | "red" | null>(null);
+  const [playerChoice, setPlayerChoice] = useState<boolean | null>(null);
+  const [opponentChoice, setOpponentChoice] = useState<boolean | null>(null);
   const [gamePool, setGamePool] = useState(100);
   const [playerBalance, setPlayerBalance] = useState(50);
 
   const { account } = useWallet();
 
-  // Initialize the submitDecision function from the hook
-  if (account) {
-    const res = useSubmitDecision(account.address, sessionID, round, true);
-  }
+  // Use the hook correctly
+  const submitDecision = useSubmitDecision(
+    account?.address || '',
+    sessionID,
+    round,
+    playerChoice || false // Provide a default value to avoid null
+  );
 
   useEffect(() => {
-    if (playerChoice) {
+    if (playerChoice !== null) {
       setTimeout(() => {
-        setOpponentChoice(Math.random() > 0.5 ? "green" : "red");
+        setOpponentChoice(Math.random() > 0.5);
       }, 1000);
     }
   }, [playerChoice]);
 
-  // Handles player choice and triggers the submitDecision hook
-  const handlePlayerChoice = async (choice: "green" | "red") => {
+  const handlePlayerChoice = async (choice: boolean) => {
     setPlayerChoice(choice);
     try {
-      await submitDecision(); // Trigger the decision submission
+      if (account && submitDecision) {
+        await submitDecision();
+      }
     } catch (error) {
       console.error("Error submitting decision:", error);
     }
   };
 
   const advanceRound = () => {
-    if (playerChoice === "green" && opponentChoice === "green") {
+    if (playerChoice && opponentChoice) {
       setPlayerBalance((prev) => prev + 10);
       setGamePool((prev) => prev - 20);
-    } else if (playerChoice === "red" && opponentChoice === "green") {
+    } else if (!playerChoice && opponentChoice) {
       setPlayerBalance((prev) => prev + 20);
       setGamePool((prev) => prev - 20);
     }
 
-    if (round < 5) setRound(round + 1);
+    if (round < 5) setRound((prev) => prev + 1);
     setPlayerChoice(null);
     setOpponentChoice(null);
   };
@@ -215,8 +218,8 @@ export default function ShortGameMode() {
 
                 <ChoiceButtons
                   playerChoice={playerChoice}
-                  handlePlayerChoice={handlePlayerChoice} // Pass the handlePlayerChoice function
-                  disabled={!!opponentChoice}
+                  handlePlayerChoice={handlePlayerChoice}
+                  disabled={opponentChoice !== null}
                 />
               </div>
             </div>
