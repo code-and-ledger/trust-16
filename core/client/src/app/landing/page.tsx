@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "../../components/ui/card";
-import Main from "../../components/main"; // Assuming Main component is in the same directory
+import Main from "../../components/main";
 import SplashScreen from "../../components/splash-screen";
 import GameModeSelector from "../../components/game-mode-selector";
 import PlayerDashboard from "../../components/ui/answer-history";
@@ -16,7 +16,7 @@ const LandingPage: React.FC = () => {
     const fetchTotalGames = async () => {
         try {
             const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
-            const events = await sessionCreated(aptos); // Assuming sessionCreated is a valid function
+            const events = await sessionCreated(aptos);
             if (events.length > 0) {
                 setTotalGames(events.length); // Total number of sessions created
             }
@@ -41,13 +41,13 @@ const LandingPage: React.FC = () => {
                         <div className="w-full h-full p-4 flex flex-col gap-4">
                             {/* Active players, Total games, Power-up section */}
                             <div className="flex gap-4">
-                                <Card className="bg-white flex-1 ">
+                                <Card className="bg-white flex-1 disabled-section">
                                     <CardContent className="p-2 flex justify-between items-center">
                                         <p className="text-sm font-semibold">Rewards pool in $:</p>
                                         <p className="text-lg font-bold">N/A</p>
                                     </CardContent>
                                 </Card>
-                                <Card className="flex-1">
+                                <Card className="flex-1 disabled-section">
                                     <CardContent className="p-3 flex flex-row justify-between items-center">
                                         <p className="text-sm font-semibold">Active players</p>
                                         <p className="text-lg font-bold">N/A</p>

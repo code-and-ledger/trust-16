@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 
 const gameModes = [
   { mode: "Campaign", inverted: true },
-  { mode: "Short", inverted: true },
+  { mode: "1-round", inverted: true },
   { mode: "5-minutes", inverted: false },
   { mode: "Tournament", inverted: false }
 ]
@@ -19,21 +19,15 @@ export default function GameModeSelector() {
   useEffect(() => {
     if (selectedMode) {
       // Go to matchmaking first
-      setIsMatchmaking(true);
+      setIsMatchmaking(true)
       router.push('/matchmaking')
 
       // Simulate matchmaking process (you can replace this with real logic)
       const matchmakingTimer = setTimeout(() => {
         setIsMatchmaking(false)
         // After matchmaking, navigate to the selected game mode
-        if (selectedMode === "Short") {
+        if (selectedMode === "1-round") {
           router.push('/short-game')
-        } else if (selectedMode === "Campaign") {
-          router.push('/campaign-game')
-        } else if (selectedMode === "5-minutes") {
-          router.push('/five-minutes-game')
-        } else if (selectedMode === "Tournament") {
-          router.push('/tournament-game')
         }
       }, 3000) // Simulate 3 seconds of matchmaking
 
@@ -48,8 +42,8 @@ export default function GameModeSelector() {
         {gameModes.map((gameMode) => (
           <div
             key={gameMode.mode}
-            onClick={() => setSelectedMode(gameMode.mode)}
-            className=""
+            onClick={() => gameMode.mode === "1-round" && setSelectedMode(gameMode.mode)}
+            className={gameMode.mode !== "1-round" ? "disabled-mode" : "enabled-mode"}
           >
             <GameModeCard
               mode={gameMode.mode}

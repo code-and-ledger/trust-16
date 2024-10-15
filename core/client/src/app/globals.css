@@ -86,3 +86,30 @@
     @apply bg-background text-foreground;
   }
 }
+
+.enabled-mode:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.disabled-mode {
+  cursor: not-allowed;
+  opacity: 0.5;
+  /* Disable hover transition */
+  pointer-events: none;
+}
+
+.disabled-mode:hover {
+  transform: none; /* Ensure no hover effect */
+  transition: none;
+}
+
+.disabled-section {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.disabled-section:hover {
+  transform: none;
+  transition: none;
+}
