@@ -28,7 +28,7 @@ const useSubmitDecision = (
 
     // Using the wallet hook
     const { signAndSubmitTransaction } = useWallet();
-    console.log('account address:', accountAddress);
+    // console.log('account address:', accountAddress);
 
     // Define the payload function as async to use await
     const payload = async () => {

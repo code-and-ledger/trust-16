@@ -148,7 +148,6 @@ export default function ShortGameMode() {
   // Initialize the submitDecision function from the hook
   if (account) {
     const res = useSubmitDecision(account.address, sessionID, round, true);
-    console.log("res", res);
   }
 
   useEffect(() => {

@@ -24,22 +24,22 @@ export default function MatchMakingPage() {
   };
 
   const handleInviteFriend = () => {
-    console.log("Opening invite modal");
+    // console.log("Opening invite modal");
     setModalOpen(true); // Open modal
   };
 
   const handleCloseModal = () => {
-    console.log("Closing modal");
+    // console.log("Closing modal");
     setModalOpen(false); // Close modal
   };
 
   const handleCancel = () => {
-    console.log("Navigating to /landing");
+    // console.log("Navigating to /landing");
     router.push('/landing'); // Navigate back to the landing page
   };
 
   const handleJoinGame = () => {
-    console.log("Joining game", gameDetails); // Use game details when joining
+    // console.log("Joining game", gameDetails); // Use game details when joining
     setLoading(true);
     router.push('/short-game'); // Navigate to the game page
   };
@@ -72,9 +72,9 @@ export default function MatchMakingPage() {
                   <Image
                     src="/flinch.png"
                     alt="Opponent"
-                    width={100}
-                    height={100}
-                    className="rounded-full mx-auto"
+                    width={200}
+                    height={200}
+                    className="rounded-full mx-auto object-cover invert"
                   />
                   <p className="mt-2 text-sm md:text-base">Opponent</p>
                   <p className="text-xs md:text-base text-center text-muted-foreground">

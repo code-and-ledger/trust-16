@@ -1,58 +1,67 @@
-import { useWallet, Wallet, WalletName, WalletReadyState } from '@aptos-labs/wallet-adapter-react';
-import Link from 'next/link'; 
-import { useRouter } from 'next/navigation';
+"use client"
+
+import { useWallet, Wallet, WalletName, WalletReadyState } from '@aptos-labs/wallet-adapter-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Button } from "@/components/ui/button"
+import { LogOut, Play } from 'lucide-react'
 
 export const WalletButton = () => {
-  const { wallets, connected, disconnect } = useWallet();
-  const router = useRouter();
+  const { wallets, connected, disconnect } = useWallet()
+  const router = useRouter()
 
-  // Select "Continue with Google" wallet
-  const googleWallet = wallets ? wallets.find((wallet) => wallet.name === "Continue with Google") : null;
+  // Only "Continue with Google" is supported for now
+  const googleWallet = wallets ? wallets.find((wallet) => wallet.name === "Continue with Google") : null
 
   if (!wallets || wallets.length === 0) {
-    return <p>No wallets found</p>;
+    return <p className="text-white">No wallets found</p>
   }
 
   if (!googleWallet) {
-    return <p>wallet not found</p>;
+    return <p className="text-white">Wallet not found</p>
   }
 
   return (
-    <div>
+    <div className="space-y-4">
       {connected ? (
         <>
-          <p>Connected</p>
-          <Link href="/landing">
-            <button className="bg-blue-500 text-white py-2 px-4 rounded-lg">Start</button>
-          </Link>
-          <button
-            className="p-2 text-white bg-red-500 hover:bg-red-700 rounded"
-            onClick={disconnect}
-          >
-            Disconnect
-          </button>
+          <p className="text-white text-center">Connected</p>
+          <div className="flex justify-center space-x-4">
+            <Link href="/landing">
+              <Button className="bg-black text-white border border-white px-4 py-2 rounded flex items-center text-sm transition-all duration-300 ease-in-out hover:bg-white hover:text-black hover:scale-105">
+                <Play className="w-4 h-4 mr-2" />
+                Start
+              </Button>
+            </Link>
+            <Button
+              onClick={disconnect}
+              className="bg-black text-white border border-white px-4 py-2 rounded flex items-center text-sm transition-all duration-300 ease-in-out hover:bg-white hover:text-black hover:scale-105"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Disconnect
+            </Button>
+          </div>
         </>
       ) : (
         <WalletView wallet={googleWallet} />
       )}
     </div>
-  );
-};
+  )
+}
 
-// Ensure WalletView is properly updated as before
 const WalletView = ({ wallet }: { wallet: Wallet | any }) => {
-  const { connect } = useWallet();
+  const { connect } = useWallet()
 
   const onWalletConnectRequest = async (walletName: WalletName) => {
     try {
-      await connect(walletName);
+      await connect(walletName)
     } catch (error) {
-      console.warn(error);
-      window.alert('Failed to connect wallet');
+      console.warn(error)
+      window.alert('Failed to connect wallet')
     }
-  };
+  }
 
-  const isWalletReady = wallet.readyState === WalletReadyState.Installed || wallet.readyState === WalletReadyState.Loadable;
+  const isWalletReady = wallet.readyState === WalletReadyState.Installed || wallet.readyState === WalletReadyState.Loadable
 
   return (
     <button
@@ -64,5 +73,5 @@ const WalletView = ({ wallet }: { wallet: Wallet | any }) => {
     >
       {isWalletReady ? `Connect` : `${wallet.name} Not Ready`}
     </button>
-  );
-};
+  )
+}
