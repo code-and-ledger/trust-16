@@ -7,9 +7,9 @@ import Image from 'next/image';
 import InviteModal from '../../components/invite-modal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import useAdminPrepareShortGame from '@/hooks/router/useAdminPrepareShortGame';
 import useJoinGame from '@/hooks/router/useJoinGame';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
+
 export default function MatchMakingPage() {
   
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function MatchMakingPage() {
   // Initialize the useJoinGame hook
   const joinGame = useJoinGame(account?.address || '', gameDetails?.session_id || '');
 
-  const handleInviteSuccess = (response: any) => {
+  const handleInviteSuccess = async (response: any) => {
     setInvitationSent(true);
     setGameDetails(response);
     setModalOpen(false);
@@ -45,6 +45,7 @@ export default function MatchMakingPage() {
     setLoading(true);
     try {
       await joinGame();
+      console.log("Game details:", gameDetails);
       router.push(`/short-game?sessionId=${gameDetails?.session_id}`);
     } catch (error) {
       console.error("Error joining game:", error);
