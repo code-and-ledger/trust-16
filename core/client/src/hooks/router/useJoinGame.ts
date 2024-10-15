@@ -1,4 +1,4 @@
-import { ENDPOINTS, MODULE_NAMES } from '@/utils/constants';
+import { ENDPOINTS, MODULE_NAMES, TRUST_16_TESTNET } from '@/utils/constants';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 
 const { signAndSubmitTransaction } = useWallet();
@@ -18,7 +18,7 @@ const useJoinGame = (
         const response = await signAndSubmitTransaction({
             sender: accountAddress,
             data: {
-                function: ENDPOINTS[MODULE_NAMES.ROUTER].JOIN_GAME as `${string}::${string}::${string}`,
+                function: `${TRUST_16_TESTNET}::${MODULE_NAMES.ROUTER}::${ENDPOINTS[MODULE_NAMES.ROUTER].JOIN_GAME}` as any,
                 typeArguments: [],
                 functionArguments: [ sessionID ],
             }

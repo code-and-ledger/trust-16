@@ -73,7 +73,7 @@ export const FUNCTION_NAMES = {
     SHORT_GAME_ROUNDS_COUNT: 'rounds_count',
     SHORT_GAME_ROUND_DURATION: 'round_duration',
     // aptos framework
-    // TODO: add the needed functions here
+    
 }
 
 export const EVENTS_NAMES = {

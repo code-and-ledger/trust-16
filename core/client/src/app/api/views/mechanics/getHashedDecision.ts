@@ -1,4 +1,4 @@
-import { ENDPOINTS, MODULE_NAMES } from '@/utils/constants';
+import { ENDPOINTS, MODULE_NAMES, TRUST_16_TESTNET } from '@/utils/constants';
 import { Aptos, InputViewFunctionData, MoveValue } from '@aptos-labs/ts-sdk';
 
 /**
@@ -18,7 +18,8 @@ const getHashedDecision = async (
 ): Promise<MoveValue> => {
   try {
     const payload: InputViewFunctionData = {
-      function: ENDPOINTS[MODULE_NAMES.MECHANICS].HASHED_DECISION as `${string}::${string}::${string}`,
+      function: `${TRUST_16_TESTNET}::${MODULE_NAMES.MECHANICS}::${ENDPOINTS[MODULE_NAMES.MECHANICS].HASHED_DECISION}` as any,
+      // function: ENDPOINTS[MODULE_NAMES.MECHANICS].HASHED_DECISION as `${string}::${string}::${string}`,
       typeArguments: [],
       functionArguments: [sessionID, roundIndex, playerAddress],
     };

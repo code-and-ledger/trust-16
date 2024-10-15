@@ -34,7 +34,10 @@ const useAdminSubmitPepperAndFinishRound = (
   roundIndex: number,
   // hash: string
 ) => {
-  const hash = "0x706570706572";
+  // This is for PoC purposes only 
+  // in a real-world scenario, the pepper is randomly generated and stored in a encrypted database
+  // 0x706570706572
+  const hash = "[112,101,112,112,101,114]";
   const payload = async () => {
     try {
       // Execute the PREPARE_SHORT_GAME entry function using Surf
