@@ -1,0 +1,139 @@
+\documentclass[table, twocolumn]{article}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage[acronym]{glossaries}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{intersections}
+
+% Page options.
+\pagecolor{white}
+\color{black}
+\geometry{left=35pt, top=50pt, bottom=50pt, right=35pt}
+
+% Acronyms.
+\newacronym{nft}{NFT}{Non-Fungible Token}
+\newacronym{ai}{AI}{Artificial Intelligence}
+\newacronym{pvp}{PvP}{Player vs Player}
+
+% Links.
+\hypersetup{colorlinks=true, allcolors={blue}}
+
+\title{%
+  \Huge \texttt{trust16} \\ \vspace{10pt}
+  \small \emph{A Blockchain-Based Game of Strategy and Cooperation}
+}
+\author{Code\&Ledger}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Overview} \label{sec:overview}
+
+\texttt{trust16} is a game that explores trust through strategy and cooperation. The goal is to provide a way to measure trust in the digital world. Players make decisions that reflect how much they’re willing to trust others, and the game tracks these decisions to give a sense of how trustworthy they are.
+
+\section{Short Game Mode} \label{sec:short-game-mode}
+
+Short Game Mode is designed to be quick and strategic. It’s all about making decisions that either show cooperation or competition, and seeing how your choices impact both you and your opponent.
+
+\subsection{Setup}
+\begin{itemize}
+    \item Each player deposits $d_p$ TRUST into the game.
+    \item The rewards pool adds $c_r$ TRUST to the total.
+    \item The total game pool starts at $2d_p + c_r$ TRUST.
+\end{itemize}
+
+\subsection{Rounds}
+The game consists of 5 rounds. Each round, players choose to either cooperate (Green) or compete (Red). Once both players have made their choice, the decisions are revealed and TRUST is distributed accordingly.
+
+\subsection{TRUST Distribution}
+The distribution of TRUST depends on the combination of choices made by the players. Table \ref{tab:trust-distribution} shows how TRUST is allocated.
+
+\begin{table}[!htb]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline \rowcolor{gray!20}
+    Scenario        & Player 1                 & Player 2                 \\ \hline
+    Green-Green     & $r_c$ deposit       & $r_c$ deposit       \\
+                    & $+r_c$ rewards pool & $+r_c$ rewards pool \\ \hline
+    Red-Green       & Previous balance         & $r_c$ rewards pool  \\
+                    & $+$ Player 2's balance   &                          \\
+                    & $+r_t$ Player 2     &                          \\ \hline
+    Red-Red         & 0 TRUST                  & 0 TRUST                  \\ \hline
+  \end{tabular}
+  \caption{TRUST distribution based on player choices}
+  \label{tab:trust-distribution}
+\end{table}
+
+In this mode, decisions made early in the game have consequences later. This accumulation-style scoring makes it so that your strategy in one round will affect your outcomes in the next. The aim is to simulate real-life trust scenarios where actions have lasting effects.
+
+\section{Long Game Mode} \label{sec:long-game-mode}
+
+Long Game Mode is slower and more in-depth. There’s a focus on negotiation and strategy between players. Unlike the Short Game, it consists of a single round, but the stakes are higher, and there’s more time for players to discuss their strategies before making a decision.
+
+\begin{itemize}
+    \item Duration: Variable, set by the players during a negotiation phase.
+    \item One round with higher stakes and more complex reward distribution.
+\end{itemize}
+
+\section{Technical Architecture}
+
+\subsection{Blockchain Integration}
+\texttt{trust16} runs on the Aptos blockchain. Our goal is to make the blockchain experience invisible to the players, so they can focus on the game rather than the technology behind it. Here’s how we’re achieving that:
+
+\begin{itemize}
+    \item OICD: Players can sign in using familiar Web2 methods (like Google login) without needing a crypto wallet.
+    \item Keyless Features: Players don’t have to manage private keys or confirm transactions manually. This all happens seamlessly.
+    \item Sponsored Transactions: Players don’t pay gas fees. All transactions are covered by the game.
+    \item Fast Finality: Aptos transactions finalize in under 0.9 seconds, which means there’s no lag in gameplay.
+    \item Low Gas Fees: Aptos has very cheap transaction fees, which makes it feasible for us to sponsor all the transactions.
+    \item Dispatchable Fungible Asset: Aptos framework allows for adding custom hooks within the created coin, allowing for more options and control, which is compulsory when creating an in-game coin.
+\end{itemize}
+
+\subsection{Smart Contract}
+The smart contracts handle the core mechanics of the game, including player matching, outcome verification, and reward distribution. 
+
+\section{Tokenomics} \label{sec:tokenomics}
+
+TRUST is the in-game token used in \texttt{trust16}. It’s not tradable or transferable, meaning players can’t sell it or move it around outside of the game. This keeps the focus on in-game behavior rather than market speculation.
+
+\subsection{Token Valuation and Purchase}
+\begin{itemize}
+    \item 1 TRUST = 0.05€ (or 1€ = 20 TRUST)
+    \item For 10€, players receive 200 TRUST.
+\end{itemize}
+
+\subsection{Community-Boosting Dual Allocation}
+When players buy TRUST tokens, half goes to the player, and the other half is added to the game’s rewards pool. This helps to maintain a healthy balance between individual rewards and the overall prize pool.
+
+\section{Reputation System}
+
+The reputation system in \texttt{trust16} reflects how trustworthy a player is based on their in-game decisions. Players’ reputations are represented by a soulbound token, which can’t be transferred or sold.
+
+\subsection{Reputation Formula}
+The reputation score (R) is calculated using this formula:
+
+\begin{equation}
+R = \min(100, GP + CB + SS + CE + CP - RD)
+\end{equation}
+
+Where:
+\begin{itemize}
+    \item GP = Games Played (max 50 points)
+    \item CB = Cooperative Behavior (max 20 points)
+    \item SS = Successful Strategies (max 15 points)
+    \item CE = Community Engagement (max 10 points)
+    \item CP = Consistent Play (max 5 points)
+    \item RD = Reputation Decay (variable)
+\end{itemize}
+
+\section{Conclusion}
+
+\texttt{trust16} is about testing trust in a competitive and cooperative environment. We’re using blockchain technology to make sure the outcomes are fair and transparent, but our goal is to keep the blockchain side of things invisible to players. At its core, this is a game where players’ decisions have real consequences, and where trust (or the lack of it) can make or break a strategy.
+
+\end{document}
