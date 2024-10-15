@@ -8,6 +8,7 @@ import Main from "../../components/main";
 import { EvervaultCard } from "../../components/ui/evervault-card";
 import useSubmitDecision from "@/hooks/router/useSubmitDecision";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { useSearchParams } from "next/navigation";
 
 // GameInfoDialog component
 const GameInfoDialog = () => (
@@ -135,6 +136,8 @@ const RoundResult = ({ playerChoice, opponentChoice }) => (
 );
 
 export default function ShortGameMode() {
+  const searchParams = useSearchParams();
+  const sessionID = searchParams.get('sessionId') || '';
   const [round, setRound] = useState(1);
   // TODO: decsion should be a boolean
   const [playerChoice, setPlayerChoice] = useState<"green" | "red" | null>(null);
@@ -143,7 +146,6 @@ export default function ShortGameMode() {
   const [playerBalance, setPlayerBalance] = useState(50);
 
   const { account } = useWallet();
-  const sessionID = "abc"; // Replace with actual session ID
 
   // Initialize the submitDecision function from the hook
   if (account) {

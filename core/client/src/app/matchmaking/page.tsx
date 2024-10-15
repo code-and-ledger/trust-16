@@ -7,41 +7,49 @@ import Image from 'next/image';
 import InviteModal from '../../components/invite-modal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-
+import useAdminPrepareShortGame from '@/hooks/router/useAdminPrepareShortGame';
+import useJoinGame from '@/hooks/router/useJoinGame';
+import { useWallet } from '@aptos-labs/wallet-adapter-react';
 export default function MatchMakingPage() {
   
   const router = useRouter();
   const [isModalOpen, setModalOpen] = useState(false);
-  const [invitationSent, setInvitationSent] = useState(false); // Track if the invitation was successful
-  const [loading, setLoading] = useState(false); // Handle loading state
-  const [gameDetails, setGameDetails] = useState<any>(null); // Store game details from the response
+  const [invitationSent, setInvitationSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [gameDetails, setGameDetails] = useState<any>(null);
 
-  // Function that handles the success event from the modal and prints the response
+  const { account } = useWallet();
+
+  // Initialize the useJoinGame hook
+  const joinGame = useJoinGame(account?.address || '', gameDetails?.session_id || '');
+
   const handleInviteSuccess = (response: any) => {
-    setInvitationSent(true); // Update state after successful invitation
-    setGameDetails(response); // Store the response for further use
-    setModalOpen(false); // Close the modal after invite
+    setInvitationSent(true);
+    setGameDetails(response);
+    setModalOpen(false);
   };
 
   const handleInviteFriend = () => {
-    // console.log("Opening invite modal");
-    setModalOpen(true); // Open modal
+    setModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    // console.log("Closing modal");
-    setModalOpen(false); // Close modal
+    setModalOpen(false);
   };
 
   const handleCancel = () => {
-    // console.log("Navigating to /landing");
-    router.push('/landing'); // Navigate back to the landing page
+    router.push('/landing');
   };
 
-  const handleJoinGame = () => {
-    // console.log("Joining game", gameDetails); // Use game details when joining
+  const handleJoinGame = async () => {
     setLoading(true);
-    router.push('/short-game'); // Navigate to the game page
+    try {
+      await joinGame();
+      router.push(`/short-game?sessionId=${gameDetails?.session_id}`);
+    } catch (error) {
+      console.error("Error joining game:", error);
+      setLoading(false);
+    }
   };
 
   return (

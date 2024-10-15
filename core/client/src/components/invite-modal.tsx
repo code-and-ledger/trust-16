@@ -20,8 +20,11 @@ const InviteModal: React.FC<InviteModalProps> = ({ isOpen, onClose, onInviteSucc
   // Use the useWallet hook at the top level of the component
   const { account } = useWallet();
 
+  const prepareShortGame = useAdminPrepareShortGame(account?.address || '', addr2);
+
   const handleSubmit = async () => {
-    if (addr2 && (!addr2.startsWith('0x'))) {
+    if (!addr2 || !addr2.startsWith('0x')) {
+      console.error('Invalid address');
       return;
     }
 
@@ -34,20 +37,19 @@ const InviteModal: React.FC<InviteModalProps> = ({ isOpen, onClose, onInviteSucc
     }
 
     try {
-      let prepareShortGame = useAdminPrepareShortGame(account?.address, addr2); 
-      await prepareShortGame(); // This prepares the short game using the admin wallet
-      // console.log('Game prepared:', result);
+      const result = await prepareShortGame();
+      console.log('Game prepared:', result);
 
       const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
       const events = await sessionCreated(aptos);
       const event = events[events.length - 1].data;
       console.log('Event:', event);
-      onInviteSuccess(event); // Pass the response to the parent component
+      onInviteSuccess(event);
     } catch (error) {
-      console.error(error);
+      console.error('Error preparing short game:', error);
     } finally {
       setIsLoading(false);
-      onClose(); // Close the modal after submission
+      onClose();
     }
   };
 
