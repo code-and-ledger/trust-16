@@ -138,7 +138,7 @@ const RoundResult = ({ playerChoice, opponentChoice }) => (
 export default function ShortGameMode() {
   const searchParams = useSearchParams();
   const sessionID = searchParams.get('sessionId') || '';
-  const [round, setRound] = useState(1);
+  const [round, setRound] = useState(0);
   const [playerChoice, setPlayerChoice] = useState<boolean | null>(null);
   const [opponentChoice, setOpponentChoice] = useState<boolean | null>(null);
   const [gamePool, setGamePool] = useState(100);

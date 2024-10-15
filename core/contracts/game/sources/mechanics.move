@@ -260,7 +260,7 @@ module trust_16::mechanics {
         session::assert_session_valid(session_id);
         session::assert_player_active_in_session(vector[signer_addr], session_id);
         // round checks 
-        assert!(is_active(session_id, round_index), EROUND_INVALID);
+        // assert!(is_active(session_id, round_index), EROUND_INVALID);
         assert!(round_index == current_round_index(session_id), EROUND_INVALID);
         // ensure the player did not submit a decision in the round yet
         let round = borrow_round(session_id, round_index);
