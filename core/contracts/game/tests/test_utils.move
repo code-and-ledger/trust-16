@@ -9,22 +9,17 @@ module trust_16::test_utils {
     use aptos_framework::aptos_coin::{Self, AptosCoin as APT};
     use aptos_framework::coin;
     use aptos_framework::randomness;
-    // use aptos_framework::dispatchable_fungible_asset;
     use aptos_framework::fungible_asset::{Self, Metadata};
     use aptos_framework::genesis;
     use aptos_framework::primary_fungible_store;
     use aptos_framework::object::Object;
     use aptos_framework::timestamp;
 
-    use aptos_std::debug;
-
     use std::option;
     use std::signer;
 
     use trust_16::admin;
-    use trust_16::rewards_pool;
     use trust_coin::trust_coin;
-    use trust_16::session;
 
     const AMOUNT: u64 = 1_000_00000000; // 1000 APT
 

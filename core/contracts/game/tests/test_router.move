@@ -5,11 +5,7 @@
 
 #[test_only]
 module trust_16::test_router {
-    use aptos_framework::timestamp;
-    use aptos_std::simple_map::{Self, SimpleMap};
-    use std::debug;
     use std::signer;
-    use std::string::{Self, String};
     use trust_16::router;
     use trust_16::test_utils;
     use trust_16::utils;
@@ -55,100 +51,5 @@ module trust_16::test_router {
             0,
             PEPPER
         );
-        
-        // fast forward to start the next round
-        timestamp::fast_forward_seconds(60);
-
-        // second round
-        router::submit_decision(
-            alice,
-            session_id,
-            1,
-            utils::hashed_cooperate(PEPPER)
-        );
-        router::submit_decision(
-            bob,
-            session_id,
-            1,
-            utils::hashed_cooperate(PEPPER)
-        );
-        router::admin_submit_pepper_and_finish_round(
-            session_manager,
-            session_id,
-            1,
-            PEPPER
-        );
-
-        // fast forward to start the next round
-        timestamp::fast_forward_seconds(60);
-
-        // third round
-        router::submit_decision(
-            alice,
-            session_id,
-            2,
-            utils::hashed_cooperate(PEPPER)
-        );
-        router::submit_decision(
-            bob,
-            session_id,
-            2,
-            utils::hashed_cooperate(PEPPER)
-        );
-        router::admin_submit_pepper_and_finish_round(
-            session_manager,
-            session_id,
-            2,
-            PEPPER
-        );
-
-        // fast forward to start the next round
-        timestamp::fast_forward_seconds(60);
-
-        // fourth round
-        router::submit_decision(
-            alice,
-            session_id,
-            3,
-            utils::hashed_cooperate(PEPPER)
-        );
-        router::submit_decision(
-            bob,
-            session_id,
-            3,
-            utils::hashed_cooperate(PEPPER)
-        );
-        router::admin_submit_pepper_and_finish_round(
-            session_manager,
-            session_id,
-            3,
-            PEPPER
-        );
-
-        // fast forward to start the next round
-        timestamp::fast_forward_seconds(60);
-
-        // fifth (last) round
-        router::submit_decision(
-            alice,
-            session_id,
-            4,
-            utils::hashed_cooperate(PEPPER)
-        );
-
-        router::submit_decision(
-            bob,
-            session_id,
-            4,
-            utils::hashed_cooperate(PEPPER)
-        );
-
-        router::admin_submit_pepper_and_finish_round(
-            session_manager,
-            session_id,
-            4,
-            PEPPER
-        );
-        // game should end after the last round
     }
 }

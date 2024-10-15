@@ -5,12 +5,8 @@
 #[test_only]
 module trust_16::test_mechanics {
     use aptos_framework::timestamp;
-    use aptos_std::simple_map::{Self, SimpleMap};
-    use std::debug;
     use std::signer;
-    use std::string::{Self, String};
     use trust_16::mechanics;
-    use trust_16::session;
     use trust_16::test_utils;
     use trust_16::utils;
 
@@ -19,7 +15,7 @@ module trust_16::test_mechanics {
     #[test(aptos_framework = @0x1, dev = @dev, trust_coin = @trust_coin, trust_16 = @trust_16, session_manager = @session_manager, alice = @0x111, bob = @0x222, charlie = @0x333)]
     public fun prepare_game(aptos_framework: &signer, dev: &signer, trust_coin: &signer, trust_16: &signer, session_manager: &signer, alice: &signer, bob: &signer, charlie: &signer) {
         test_utils::setup_test(aptos_framework, dev, trust_coin, trust_16, session_manager, alice, bob, charlie);
-        let session_id = mechanics::prepare_game(
+        mechanics::prepare_game(
             mechanics::game_type_for_test(),
             vector[signer::address_of(alice), signer::address_of(bob), signer::address_of(charlie)],
             5,
