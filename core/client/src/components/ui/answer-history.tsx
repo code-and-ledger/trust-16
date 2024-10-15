@@ -155,13 +155,13 @@ export default function PlayerDashboard() {
             />
             <FeatureButton 
               icon={<Zap size={24} />} 
-              label="Speed Boost" 
+              label="AI predict" 
               color="#626262FF" 
               position="bottom-0 right-0 translate-x-1/2 translate-y-1/2 rotate-[-45deg]"
             />
             <FeatureButton 
               icon={<Target size={24} />} 
-              label="Accuracy" 
+              label="Hide bails" 
               color="#000000FF" 
               position="bottom-0 left-0 -translate-x-1/2 translate-y-1/2 rotate-[45deg]"
             />
