@@ -551,6 +551,6 @@ module trust_coin::trust_coin {
 
     #[test_only]
     public fun init_for_test(deployer: &signer) {
-        init(deployer);
+        init_module(deployer);
     }
 }
