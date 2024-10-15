@@ -1,4 +1,3 @@
-import { EVENTS_NAMES, MODULE_NAMES, TRUST_16_TESTNET } from "@/utils/constants";
 import {
     Aptos,
     GetEventsResponse,
@@ -11,7 +10,7 @@ import {
      */
     const sessionCreatedEvent = await aptos.getModuleEventsByEventType({
 
-    eventType: `0xcf4bffccb2fda4d8bade961d03514d9daa06f2de0f43c8122ecbe1bbd6c9742::router::SessionCreated`,
+    eventType: `0x4ea53251f99386571e1c48ff1ad595d84b8cb4c6ba814526990f560e9a90a3c7::router::SessionCreated`,
       minimumLedgerVersion: 0,
     });
   

@@ -84,7 +84,7 @@ const LandingPage: React.FC = () => {
 
                                 {/* Right side with Answer History */}
                                 <div className="w-1/2  p-4 flex flex-col items-center justify-center">
-                                    <PlayerDashboard answers={["trust", "bail", "bail", "trust", "bail", "bail", "trust", "bail", "bail"]} />
+                                <PlayerDashboard answers={["trust", "bail", "bail", "trust", "bail", "bail", "trust", "bail", "bail"]} />
                                 </div>
                             </div>
                         </div>

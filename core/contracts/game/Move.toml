@@ -4,7 +4,7 @@ version = "0.0.1"
 authors = ["lay (Aladeen): aladeen@codeandledger.com"]
 
 [addresses]
-trust_16 = "0x71907fa0ce462844261c89c85711a9e20d906281f87dc95f6f9010ebe991bebb"
+trust_16 = "0x4ea53251f99386571e1c48ff1ad595d84b8cb4c6ba814526990f560e9a90a3c7"
 session_manager = "0x9a01c4338e07af8b540990de6d4fb7546a2034166e56befd37da35a8c5fcc655"
 [dev-addresses]
 # trust_16 = "0xc1"

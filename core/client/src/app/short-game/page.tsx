@@ -12,7 +12,7 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react"
 import { useSearchParams } from "next/navigation"
 import ColoredSquares from "@/components/ui/colored-squares"
 
-// GameInfoDialog component (unchanged)
+// GameInfoDialog component
 const GameInfoDialog = () => (
   <Dialog>
     <DialogTrigger asChild>
@@ -149,8 +149,7 @@ const RoundResult = ({ playerChoice, opponentChoice }) => (
 )
 
 export default function ShortGameMode() {
-  const searchParams = useSearchParams()
-  const sessionID = searchParams.get('sessionId') || ''
+  const [sessionID, setSessionID] = useState<string>('')
   const [round, setRound] = useState(0)
   const [playerChoice, setPlayerChoice] = useState<boolean | null>(null)
   const [opponentChoice, setOpponentChoice] = useState<boolean | null>(null)
@@ -158,6 +157,12 @@ export default function ShortGameMode() {
   const [playerBalance, setPlayerBalance] = useState(50)
 
   const { account } = useWallet()
+
+  // Use useEffect to fetch sessionId from window.location.search
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    setSessionID(params.get('sessionId') || '')
+  }, [])
 
   const submitDecision = useSubmitDecision(
     account?.address || '',
@@ -190,7 +195,6 @@ export default function ShortGameMode() {
       <div className="absolute top-0 bottom-0 right-1/2 bg-black transition-all duration-500 ease-in-out w-1/2 h-full" />
       <Main width="90vw" height="90vh">
         <div className="w-full h-full p-4 flex font-mono flex-col">
-          {/* Header */}
           <div className="w-full flex flex-row items-center justify-between mb-8">
             <div className="text-white">
               <div className="text-3xl">Round {round + 1} of 1</div>
@@ -201,25 +205,21 @@ export default function ShortGameMode() {
             </div>
           </div>
 
-          {/* Round Result */}
           <RoundResult playerChoice={playerChoice} opponentChoice={opponentChoice} />
 
-          {/* Main Game Area */}
           <div className="flex-1 flex">
-            {/* Left half (black) */}
             <div className="w-1/2 text-white p-8 flex flex-col justify-between">
               <ColoredSquares 
-                initialTitle="Player History" 
+                initialTitle="Your history"
                 pattern={['green', 'red', 'green', 'red', 'green', 'red', 'green', 'red', 'green']}
                 alignLeft={true} 
               />
               <PlayerCard username="$username" balance={playerBalance} />
             </div>
 
-            {/* Right half (white) */}
             <div className="w-1/2 text-black p-8 flex flex-col justify-between">
               <ColoredSquares 
-                initialTitle="Opponent History" 
+                initialTitle="The opponent's history"
                 pattern={['green', 'red', 'green', 'red', 'green', 'red', 'green', 'red', 'green']}
                 alignLeft={false} 
               />
@@ -227,7 +227,6 @@ export default function ShortGameMode() {
             </div>
           </div>
 
-          {/* Choice Buttons */}
           <div className="mt-8">
             <ChoiceButtons
               playerChoice={playerChoice}
